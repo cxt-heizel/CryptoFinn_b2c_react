@@ -27,11 +27,11 @@ export const routes: AppRoute[] = [
   {
     path: '/dashboard',
     element: <DashboardPage />,
-    layout: ({ children }) => <MainLayout>{children}</MainLayout>,
+    layout: ({ children }) => <PublicLayout>{children}</PublicLayout>,
   },
   {
     path: '/reports',
-    element: <ReportsPage />,
+    element: <DashboardPage />,
     layout: ({ children }) => <MainLayout>{children}</MainLayout>,
   },
 ];

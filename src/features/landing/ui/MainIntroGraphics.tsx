@@ -402,7 +402,6 @@ const GraphicsRoot = styled.section`
     grid-template-columns: 1fr 250px;
     width: 100%;
     align-items: stretch;
-    gap: 18px;
   }
 
   .desktop-graphics .service-wrapper ul {

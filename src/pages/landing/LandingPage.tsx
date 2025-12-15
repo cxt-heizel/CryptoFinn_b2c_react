@@ -1,12 +1,11 @@
-import { Box, Container, Typography, Stack, Accordion, AccordionSummary, AccordionDetails, Divider } from '@mui/material';
+import { Box, Container, Typography, Stack } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { LandingTitle } from '../../features/landing/ui/LandingTitle'
-import { LandingCardContent } from '../../features/landing/ui/LandingCardContent'
-import { MainIntroGraphics } from '../../features/landing/ui/MainIntroGraphics'
-import { DarkSection } from '../../features/landing/ui/DarkSection'
-import { AppButton } from '../../shared/ui/AppButton'
-import { red } from '@mui/material/colors';
+import { LandingTitle } from '../../features/landing/ui/LandingTitle';
+import { LandingCardContent } from '../../features/landing/ui/LandingCardContent';
+import { MainIntroGraphics } from '../../features/landing/ui/MainIntroGraphics';
+import { DarkSection } from '../../features/landing/ui/DarkSection';
+import { LandingAccordion } from '../../features/landing/ui/LandingAccordion';
+import { AppButton } from '../../shared/ui/AppButton';
 
 const ContainerSX = {
   display: 'grid',
@@ -428,37 +427,10 @@ export const LandingPage = () => {
             h1={<>자주 묻는 질문</>}
             h2={<>서비스 이용 과정에서 자주 문의하시는 사항을 정리하여 안내드립니다.</>}
           />
-          <Stack  sx={{ width: '100%', borderRadius: 0,}}>
-            {faqs.map((faq, idx) => (
-              <Accordion
-                key={faq.question}
-                disableGutters
-                square={false}
-                defaultExpanded={idx === 0}
-                sx={{
-                  bgcolor: 'background.grey' ,
-                  borderBottom: '1px solid var(--grey-200)',
-                  boxShadow: 'none',
-                  '&::before': { display: 'none' },
-                  '&:first-child':{borderTop: '2px solid var(--grey-800)', borderRadius:0},
-                  '&:last-child':{ borderRadius:0}
-                }}
-              >
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography variant="subtitle2" sx={{ fontWeight: 700, p: '30px 20px', }}>
-                    {faq.question}
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Typography variant="body1" sx={{ whiteSpace: 'pre-line', color: 'text.secondary', p: 10, pt:0,pb: 15 }}>
-                    {faq.answer}
-                  </Typography>
-                </AccordionDetails>
-              </Accordion>
-            ))}
-          </Stack>
+          <LandingAccordion faqs={faqs} />
         </Container>
       </Box>
     </>
   );
 };
+
