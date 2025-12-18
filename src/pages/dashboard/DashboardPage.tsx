@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box,AppBar,Toolbar,Typography } from '@mui/material';
 import { PublicLayout } from '../../app/layout/PublicLayout';
 import { DashboardCharts } from '../../features/dashboard/ui/DashboardCharts';
 import { useDashboardStatsQuery } from '../../features/dashboard/hooks/useDashboardStatsQuery';
@@ -8,12 +8,10 @@ export const DashboardPage = () => {
 
   return (
     <>
-      <Box sx={{ mt: 3 }}>
-        <DashboardCharts stats={data} loading={isLoading} />
-      </Box>
-      <Box sx={{ mt: 3 }}>
-        <DashboardCharts stats={data} loading={isLoading} />
-      </Box>
+     <Typography variant="h5" gutterBottom>
+        ConnectPage
+      </Typography>
+      <Typography color="text.secondary">Build reporting components for your domain here.</Typography>
     </>
   );
 };

@@ -43,7 +43,7 @@ export const LandingTitle = ({ isMain, h1, h2, hasCaption, align='center' }: Pro
           <Box component="img" className="mobile-only" id="title_cryptofinn" src="https://dev-www.cryptofinn.io/assets/images/product/m_title_cryptofinn.svg" />
           <Box component="img" className="mobile-only" id="title_tax" src="https://dev-www.cryptofinn.io/assets/images/product/m_title_tax.svg" />
         </MainbTitleBox>
-        <Typography variant="h3" sx={{ color: 'text.primary'}}>가상자산 세금, 더 이상 혼란은 그만</Typography>
+        <Typography variant="h3" sx={{color: 'text.primary'}}>가상자산 세금, 더 이상 혼란은 그만</Typography>
         <Typography variant="subtitle2" sx={{ color: 'text.secondary'}}>
           패시브 투자자부터 액티프 트레이더까지 모든 개인 투자자들을 위한 최적의 세금 솔루션을 제공합니다.<br/>
           복잡한 가상자산 세금 계산, 크립토핀에 맡겨주세요

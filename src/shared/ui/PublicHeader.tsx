@@ -10,9 +10,16 @@ declare global {
     jQuery: typeof $;
     $: typeof $;
   }
+  
+  interface Props {
+    isSimple?: boolean;
+  }
 }
 
-const PublicHeader = () => {
+
+
+const PublicHeader = ( {isSimple} :Props ) => {
+  console.log(isSimple);
   const headerRef = useRef<HTMLElement | null>(null);
   const ASSET_BASE = 'https://dev-www.cryptofinn.io/assets/component';
 
@@ -61,7 +68,7 @@ const PublicHeader = () => {
         if (!isUnmounted) {
           $header.cfHeader?.({
             auth : { 
-              showLoginBtn : true, 
+              showLoginBtn : !isSimple, 
               serviceType : 'tax' ,
               loginBtnLink : '/login', 
             } 

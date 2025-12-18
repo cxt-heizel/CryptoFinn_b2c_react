@@ -10,9 +10,14 @@ declare global {
     jQuery: typeof $;
     $: typeof $;
   }
+  
+  interface Props {
+    isSimple?: boolean;
+  }
 }
 
-const PublicFooter = () => {
+
+const PublicFooter = ( {isSimple} :Props) => {
   const footerRef = useRef<HTMLElement | null>(null);
   const ASSET_BASE = 'https://dev-www.cryptofinn.io/assets/component';
 
@@ -58,9 +63,11 @@ const PublicFooter = () => {
       loadScript('cf-footer-js', `${ASSET_BASE}/CryptofinnFooter.js`),
     ])
       .then(() => {
+        console.log( isSimple );
         if (!isUnmounted) {
           $footer.cfFooter?.({
             auth : { 
+              footerType: isSimple ? 'auth' : 'default', 
               serviceType : 'tax' ,
             }
           });

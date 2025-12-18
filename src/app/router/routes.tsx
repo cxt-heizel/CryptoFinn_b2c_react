@@ -2,8 +2,11 @@ import { ReactElement } from 'react';
 import { LandingPage } from '../../pages/landing/LandingPage';
 import { LoginPage } from '../../pages/auth/LoginPage';
 import { DashboardPage } from '../../pages/dashboard/DashboardPage';
-import { ReportsPage } from '../../pages/reports/ReportsPage';
-import { AuthLayout } from '../layout/AuthLayout';
+import { ConnectPage } from '../../pages/connect/ConnectPage';
+import { OverseasPage } from '../../pages/overseas/OverseasPage';
+import { MoneysourcePage } from '../../pages/moneysource/MoneysourcePage';
+import { SupportPage } from '../../pages/support/SupportPage';
+import { SettingPage } from '../../pages/setting/SettingPage';
 import { MainLayout } from '../layout/MainLayout';
 import { PublicLayout } from '../layout/PublicLayout';
 
@@ -22,16 +25,36 @@ export const routes: AppRoute[] = [
   {
     path: '/login',
     element: <LoginPage />,
-    layout: ({ children }) => <PublicLayout>{children}</PublicLayout>,
+    layout: ({ children }) => <PublicLayout isSimple={true}>{children}</PublicLayout>,
   },
   {
     path: '/dashboard',
     element: <DashboardPage />,
-    layout: ({ children }) => <PublicLayout>{children}</PublicLayout>,
+    layout: ({ children }) => <MainLayout>{children}</MainLayout>,
   },
   {
-    path: '/reports',
-    element: <DashboardPage />,
+    path: '/connect',
+    element: <ConnectPage />,
+    layout: ({ children }) => <MainLayout>{children}</MainLayout>,
+  },
+  {
+    path: '/overseas',
+    element: <OverseasPage />,
+    layout: ({ children }) => <MainLayout>{children}</MainLayout>,
+  },
+  {
+    path: '/moneysource',
+    element: <MoneysourcePage />,
+    layout: ({ children }) => <MainLayout>{children}</MainLayout>,
+  },
+  {
+    path: '/support',
+    element: <SupportPage />,
+    layout: ({ children }) => <MainLayout>{children}</MainLayout>,
+  },
+  {
+    path: '/setting',
+    element: <SettingPage />,
     layout: ({ children }) => <MainLayout>{children}</MainLayout>,
   },
 ];

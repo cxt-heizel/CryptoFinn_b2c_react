@@ -24,7 +24,7 @@ export const LandingAccordion = ({ faqs, defaultExpandedIndex = 0 }: Props) => (
           borderBottom: '1px solid var(--grey-200)',
           boxShadow: 'none',
           '&::before': { display: 'none' },
-          '&:first-child': { borderTop: '2px solid var(--grey-800)', borderRadius: 0 },
+          '&:first-of-type': { borderTop: '2px solid var(--grey-800)', borderRadius: 0 },
           '&:last-child': { borderRadius: 0 },
         }}
       >

@@ -181,7 +181,7 @@ export const LandingPage = () => {
         <Container sx={{ px: { xs: 14, md: 16 }, pt: 60, pb: 75, display: 'grid', gap: 60 }}>
           <LandingTitle isMain />
           <Box>
-            <AppButton size="large" variant="contained" onClick={handleContactClick}>
+            <AppButton size="large" variant="contained" isRounded onClick={handleContactClick}>
               개인 세무 서비스 문의하기
             </AppButton>
           </Box>
@@ -227,9 +227,9 @@ export const LandingPage = () => {
                   }}
                 >
                   <Stack direction="row" spacing={3} justifyContent="center">
-                    {statCards[0].icons.map((icon) => (
+                    {statCards[0].icons.map((icon, idx) => (
                       <Box
-                        key={icon}
+                        key={`${icon}-${idx}`}
                         component="img"
                         src={icon}
                         sx={{
@@ -382,6 +382,7 @@ export const LandingPage = () => {
           <Grid container spacing={20} sx={{maxWidth:{xs: 450, md:'unset'}}}>
             {features.map((feature) => (
               <Grid container
+                key={feature.title}
                 size={{xs: 12, md: 4}}
                 sx={{
                   background: 'radial-gradient(68% 70.71%, rgb(221, 226, 238) 53.44%, rgb(194, 203, 225) 100%)',
@@ -433,4 +434,3 @@ export const LandingPage = () => {
     </>
   );
 };
-

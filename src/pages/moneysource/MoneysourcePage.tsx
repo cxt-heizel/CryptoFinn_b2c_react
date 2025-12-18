@@ -1,12 +1,12 @@
 import { Paper, Typography } from '@mui/material';
 
-export const ReportsPage = () => {
+export const MoneysourcePage = () => {
   return (
-    <Paper sx={{ p: 3 }}>
+    <>
       <Typography variant="h5" gutterBottom>
-        Reports
+        moneysource
       </Typography>
       <Typography color="text.secondary">Build reporting components for your domain here.</Typography>
-    </Paper>
+    </>
   );
 };

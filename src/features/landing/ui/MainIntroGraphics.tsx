@@ -141,25 +141,25 @@ const GraphicsRoot = styled.section`
     overflow: hidden;
   }
 
-  .brand-wrapper li:nth-child(1) {
+  .brand-wrapper li:nth-of-type(1) {
     background: #f8fbfc;
   }
-  .brand-wrapper li:nth-child(2) {
+  .brand-wrapper li:nth-of-type(2) {
     background: #093687;
   }
-  .brand-wrapper li:nth-child(3) {
+  .brand-wrapper li:nth-of-type(3) {
     background: #314350;
   }
-  .brand-wrapper li:nth-child(4) {
+  .brand-wrapper li:nth-of-type(4) {
     background: #f8fbfc;
   }
-  .brand-wrapper li:nth-child(5) {
+  .brand-wrapper li:nth-of-type(5) {
     background: linear-gradient(121deg, #a229c5 -8.22%, #7b3fe4 79.81%);
   }
-  .brand-wrapper li:nth-child(6) {
+  .brand-wrapper li:nth-of-type(6) {
     background: #314350;
   }
-  .brand-wrapper li:nth-child(7) {
+  .brand-wrapper li:nth-of-type(7) {
     background: #f8fbfc;
   }
 
@@ -250,32 +250,32 @@ const GraphicsRoot = styled.section`
     height: 40px;
   }
 
-  .mobile-graphics .symbol-list li:nth-child(1) {
+  .mobile-graphics .symbol-list li:nth-of-type(1) {
     top: 7px;
     left: calc(6.8% - 20px);
   }
 
-  .mobile-graphics .symbol-list li:nth-child(2) {
+  .mobile-graphics .symbol-list li:nth-of-type(2) {
     top: 42px;
     left: calc(24% - 10px);
   }
-  .mobile-graphics .symbol-list li:nth-child(3) {
+  .mobile-graphics .symbol-list li:nth-of-type(3) {
     top: 7px;
     left: calc(38% - 20px);
   }
-  .mobile-graphics .symbol-list li:nth-child(4) {
+  .mobile-graphics .symbol-list li:nth-of-type(4) {
     top: 58px;
     left: calc(50% - 20px);
   }
-  .mobile-graphics .symbol-list li:nth-child(5) {
+  .mobile-graphics .symbol-list li:nth-of-type(5) {
     top: 7px;
     right: calc(38% - 20px);
   }
-  .mobile-graphics .symbol-list li:nth-child(6) {
+  .mobile-graphics .symbol-list li:nth-of-type(6) {
     top: 42px;
     right: calc(24% - 10px);
   }
-  .mobile-graphics .symbol-list li:nth-child(7) {
+  .mobile-graphics .symbol-list li:nth-of-type(7) {
     top: 7px;
     right: calc(6.8% - 20px);
   }
@@ -355,32 +355,32 @@ const GraphicsRoot = styled.section`
     height: 70px;
   }
 
-  .desktop-graphics .symbol-list li:nth-child(1) {
+  .desktop-graphics .symbol-list li:nth-of-type(1) {
     top: 0px;
     left: calc(30% - 35px);
   }
 
-  .desktop-graphics .symbol-list li:nth-child(2) {
+  .desktop-graphics .symbol-list li:nth-of-type(2) {
     top: 70px;
     left: calc(45% - 35px);
   }
-  .desktop-graphics .symbol-list li:nth-child(3) {
+  .desktop-graphics .symbol-list li:nth-of-type(3) {
     top: 105px;
     left: calc(10% - 35px);
   }
-  .desktop-graphics .symbol-list li:nth-child(4) {
+  .desktop-graphics .symbol-list li:nth-of-type(4) {
     top: 170px;
     left: calc(30% - 35px);
   }
-  .desktop-graphics .symbol-list li:nth-child(5) {
+  .desktop-graphics .symbol-list li:nth-of-type(5) {
     top: 235px;
     left: calc(10% - 35px);
   }
-  .desktop-graphics .symbol-list li:nth-child(6) {
+  .desktop-graphics .symbol-list li:nth-of-type(6) {
     top: 270px;
     left: calc(45% - 35px);
   }
-  .desktop-graphics .symbol-list li:nth-child(7) {
+  .desktop-graphics .symbol-list li:nth-of-type(7) {
     top: 340px;
     left: calc(30% - 35px);
   }

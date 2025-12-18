@@ -31,8 +31,9 @@ declare module '@mui/material/Typography' {
 
 
 export const PublicThemeProvider = ({ children }: Props) => {
+  const ASSET_BASE = 'https://dev-www.cryptofinn.io/assets';
+  const fontFamily = 'Spoqa Han Sans Neo';
   const theme = useMemo(() => {
-
     let theme = createTheme({
       spacing: 2,
       breakpoints: {
@@ -46,7 +47,7 @@ export const PublicThemeProvider = ({ children }: Props) => {
       },
     });
 
-    theme = createTheme(theme,{
+    theme = createTheme(theme, {
       palette: {
         mode: 'light',
         primary: { 
@@ -67,6 +68,7 @@ export const PublicThemeProvider = ({ children }: Props) => {
       },
       shape: { borderRadius: 12 },
       typography: {
+        fontFamily: fontFamily,
         h1: { fontSize: 70, fontWeight: 700, letterSpacing: '-0.01em', lineHeight: '140%' },
         h2: { fontSize: 60, fontWeight: 700, letterSpacing: '-0.02em', lineHeight: '140%' },
         h3: { fontSize: 24, fontWeight: 700, letterSpacing: '-0.02em', lineHeight: '140%',
@@ -97,30 +99,27 @@ export const PublicThemeProvider = ({ children }: Props) => {
         caption: { fontSize: 14, fontWeight:500, letterSpacing: '-0.02em'},
       },
       components: {
-        MuiTypography: {
-          styleOverrides: {
-            root: {
-              fontFamily:
-                'Spoqa Han Sans Neo, Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-            },
+        MuiTypography : {
+          styleOverrides: {root: {fontFamily:fontFamily},
           },
         },
         MuiButton: {
           styleOverrides: {
             root: {
-              borderRadius: 999,
+              fontFamily:fontFamily,
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
               gap: 4,
-              fontSize: 18,
               fontWeight: 700,
               textAlign: 'center',
               lineHeight: 1,
-              padding: '0 40px 0 35px'
+              padding: '0 40px 0 35px',
+              letterSpacing: 'normal',
             },
             sizeMedium: {
-              height: 50,
+              height: 45,
+              fontSize: 15,
             },
             sizeLarge: {
               height: 44,
@@ -135,75 +134,66 @@ export const PublicThemeProvider = ({ children }: Props) => {
             },
           },
         },
-        MuiContainer: {
-          styleOverrides: {
-            root: {
-              paddingInline: '1.25rem',
-            },
-          },
-        },
       },
     });
 
     return theme;
-  }, []);
+  }, [fontFamily]);
 
   return (
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
       <GlobalStyles
         styles={`
-
-          
           @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
           @font-face {
             font-family: 'Spoqa Han Sans Neo';
             font-style: normal;
             font-weight: 250;
-            src: url('/assets/fonts/SpoqaHanSansNeo-Thin.woff2') format('woff2'),
-                 url('/assets/fonts/SpoqaHanSansNeo-Thin.woff') format('woff'),
-                 url('/assets/fonts/SpoqaHanSansNeo-Thin.ttf') format('truetype');
+            src: url('${ASSET_BASE}/fonts/SpoqaHanSansNeo-Thin.woff2') format('woff2'),
+                 url('${ASSET_BASE}/fonts/SpoqaHanSansNeo-Thin.woff') format('woff'),
+                 url('${ASSET_BASE}/fonts/SpoqaHanSansNeo-Thin.ttf') format('truetype');
           }
 
           @font-face {
             font-family: 'Spoqa Han Sans Neo';
             font-style: normal;
             font-weight: 300;
-            src: url('/assets/fonts/SpoqaHanSansNeo-Light.woff2') format('woff2'),
-                 url('/assets/fonts/SpoqaHanSansNeo-Light.woff') format('woff'),
-                 url('/assets/fonts/SpoqaHanSansNeo-Light.ttf') format('truetype');
+            src: url('${ASSET_BASE}/fonts/SpoqaHanSansNeo-Light.woff2') format('woff2'),
+                 url('${ASSET_BASE}/fonts/SpoqaHanSansNeo-Light.woff') format('woff'),
+                 url('${ASSET_BASE}/fonts/SpoqaHanSansNeo-Light.ttf') format('truetype');
           }
 
           @font-face {
             font-family: 'Spoqa Han Sans Neo';
             font-style: normal;
             font-weight: 400;
-            src: url('/assets/fonts/SpoqaHanSansNeo-Regular.woff2') format('woff2'),
-                 url('/assets/fonts/SpoqaHanSansNeo-Regular.woff') format('woff'),
-                 url('/assets/fonts/SpoqaHanSansNeo-Regular.ttf') format('truetype');
+            src: url('${ASSET_BASE}/fonts/SpoqaHanSansNeo-Regular.woff2') format('woff2'),
+                 url('${ASSET_BASE}/fonts/SpoqaHanSansNeo-Regular.woff') format('woff'),
+                 url('${ASSET_BASE}/fonts/SpoqaHanSansNeo-Regular.ttf') format('truetype');
           }
 
           @font-face {
             font-family: 'Spoqa Han Sans Neo';
             font-style: normal;
             font-weight: 500;
-            src: url('/assets/fonts/SpoqaHanSansNeo-Medium.woff2') format('woff2'),
-                 url('/assets/fonts/SpoqaHanSansNeo-Medium.woff') format('woff'),
-                 url('/assets/fonts/SpoqaHanSansNeo-Medium.ttf') format('truetype');
+            src: url('${ASSET_BASE}/fonts/SpoqaHanSansNeo-Medium.woff2') format('woff2'),
+                 url('${ASSET_BASE}/fonts/SpoqaHanSansNeo-Medium.woff') format('woff'),
+                 url('${ASSET_BASE}/fonts/SpoqaHanSansNeo-Medium.ttf') format('truetype');
           }
 
           @font-face {
             font-family: 'Spoqa Han Sans Neo';
             font-style: normal;
             font-weight: 700;
-            src: url('/assets/fonts/SpoqaHanSansNeo-Bold.woff2') format('woff2'),
-                 url('/assets/fonts/SpoqaHanSansNeo-Bold.woff') format('woff'),
-                 url('/assets/fonts/SpoqaHanSansNeo-Bold.ttf') format('truetype');
+            src: url('${ASSET_BASE}/fonts/SpoqaHanSansNeo-Bold.woff2') format('woff2'),
+                 url('${ASSET_BASE}/fonts/SpoqaHanSansNeo-Bold.woff') format('woff'),
+                 url('${ASSET_BASE}/fonts/SpoqaHanSansNeo-Bold.ttf') format('truetype');
           }
 
           body {
-            font-family: 'Spoqa Han Sans Neo', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-family: ${fontFamily};
             color: #222;
             font-size: 18px;
             font-style: normal;
@@ -237,6 +227,22 @@ export const PublicThemeProvider = ({ children }: Props) => {
             --grey-900: #1D2033;
             --grey-1000: #020C1C;
           }
+
+          ':root, body': {
+            fontFamily:
+              '"Spoqa Han Sans Neo", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+          },
+
+          /* 모든 MUI 컴포넌트가 자기 font-family 고집하면 다 무시 */
+          '.MuiTypography-root, \
+          .MuiButton-root, \
+          .MuiInputBase-root, \
+          .MuiFormLabel-root, \
+          .MuiMenuItem-root, \
+          .MuiChip-root, \
+          .MuiDialog-root': {
+            fontFamily: 'inherit',
+          },
         `}
       />
       {children}
