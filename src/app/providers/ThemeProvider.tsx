@@ -13,7 +13,7 @@ export const ThemeProvider = ({ children }: Props) => {
         palette: {
           mode: 'light',
           primary: { main: '#505866' },
-          secondary: { main: '#ccc' },
+          secondary: { main: '#5789EC' },
           warning : { main: '#CE1414' },
           success : { main: '#1BC290' },
           text: {
@@ -24,9 +24,13 @@ export const ThemeProvider = ({ children }: Props) => {
         shape: { borderRadius: 4 },
         typography: {
           fontFamily: fontFamily,
-          h1: { fontSize: 26, fontWeight: 700, letterSpacing: '-0.01em', lineHeight: '140%' },
-          h2: { fontSize: 60, fontWeight: 700, letterSpacing: '-0.02em', lineHeight: '140%' },
-          body1: {fontSize: 15, fontWeight: 500}
+          h1: { fontSize: 26, fontWeight: 700, letterSpacing: '-0.01em'},
+          h2: { fontSize: 22, fontWeight: 600, letterSpacing: '-0.02em'},
+          h3: { fontSize: 18, fontWeight: 600, letterSpacing: '-0.02em'},
+          h4: { fontSize: 16, fontWeight: 600, letterSpacing: '-0.02em'},
+          subtitle1: { fontSize: 14, fontWeight: 500, letterSpacing: '-0.02em'},
+          body1: {fontSize: 14, fontWeight: 400},
+          body2: {fontSize: 12, fontWeight: 400}
         },
         breakpoints : {
           values : {
@@ -50,7 +54,6 @@ export const ThemeProvider = ({ children }: Props) => {
             styleOverrides: {
               root: {
                 borderRadius: 8,
-
                 '&:hover': {
                   backgroundColor: '#FAFAFB',
                   color: '#505866'

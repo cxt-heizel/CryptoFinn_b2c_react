@@ -89,7 +89,7 @@ const navigationUtilSections: NavigationMenuSection[] = [
 
 const appBarChildrenByMenu: Partial<Record<string, ReactNode>> = {
   dashboard: (
-    <Typography variant="body1" color="text.secondary">
+    <Typography variant="body2" color="text.secondary">
       거래 데이터를 추가할수록 정확한 데이터를 확인할 수 있어요
     </Typography>
   ),
@@ -99,7 +99,7 @@ const appBarChildrenByMenu: Partial<Record<string, ReactNode>> = {
     </AppButton>
   ),
   overseas: (
-    <Typography variant="body1" color="text.secondary">
+    <Typography variant="body2" color="text.secondary">
       거래 데이터를 추가할수록 정확한 데이터를 확인할 수 있어요
     </Typography>
   ),

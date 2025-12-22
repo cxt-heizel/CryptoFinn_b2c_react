@@ -15,7 +15,7 @@ export const AppBar = ({ title, children, ...appBarProps }: Props) => {
       sx={{ height: '92px', bgcolor: '#fff', color: 'text.primary'}}
       {...appBarProps}
     >
-      <Toolbar sx={{ height: '100%', padding: '28px 40px 24px 32px', display: 'flex', alignItems: 'center', gap: 2 }}>
+      <Toolbar sx={{ height: '100%', padding: '28px 40px 24px 32px', display: 'flex', alignItems: 'center', gap: 2}}>
         <Typography variant="h1" component="div" sx={{ flexGrow: 1 }}>
           {title}
         </Typography>

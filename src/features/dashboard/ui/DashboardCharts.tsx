@@ -1,6 +1,8 @@
-import { Grid,  Paper, Skeleton, Stack, Typography } from '@mui/material';
+import { Grid,  Paper, Skeleton, Box } from '@mui/material';
 import { formatNumber } from '../../../shared/lib/number';
 import { DashboardStat } from '../model/types';
+import { TextBlock } from '../../../shared/ui/TextBlock';
+import { ItemBlock } from '../../../shared/ui/ItemBlock';
 
 interface Props {
   stats: DashboardStat[];
@@ -24,23 +26,14 @@ export const DashboardCharts = ({ stats, loading }: Props) => {
   }
 
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={1.5}>
       {stats.map((stat) => (
-        <Grid size={{ xs: 12, md: 3 }} key={stat.label}>
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="body2" color="text.secondary">
-              {stat.label}
-            </Typography>
-            <Stack direction="row" alignItems="baseline" spacing={1}>
-              <Typography variant="h4">{formatNumber(stat.value)}</Typography>
-              {typeof stat.trend === 'number' ? (
-                <Typography color={stat.trend >= 0 ? 'success.main' : 'error.main'} variant="body2">
-                  {stat.trend >= 0 ? '+' : ''}
-                  {stat.trend}%
-                </Typography>
-              ) : null}
-            </Stack>
-          </Paper>
+        <Grid size={{ xs: 12, md: 4 }} key={stat.label}>
+          <Box sx={{padding: '12px 16px'}}>
+            <ItemBlock title='비트코인' desc='BTC' avatarUrl='https://wiki1.kr/images/thumb/5/5c/%EB%B9%84%ED%8A%B8%EC%BD%94%EC%9D%B8_%EB%A1%9C%EA%B3%A0.png/200px-%EB%B9%84%ED%8A%B8%EC%BD%94%EC%9D%B8_%EB%A1%9C%EA%B3%A0.png'>
+              <TextBlock title={stat.label} desc={stat.value} align='right'></TextBlock>
+            </ItemBlock>
+          </Box>
         </Grid>
       ))}
     </Grid>
