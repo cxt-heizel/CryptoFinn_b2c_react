@@ -1,5 +1,5 @@
 export interface DashboardStat {
   label: string;
-  value: number;
+  value: number | string;
   trend?: number;
 }

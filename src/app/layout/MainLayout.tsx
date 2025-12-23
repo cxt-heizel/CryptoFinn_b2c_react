@@ -21,9 +21,7 @@ export const MainLayout = ({ children }: Props) => {
             {appBarChildren}
           </AppBar>
           <Box sx={{ pr: 2,pb: 2, flexGrow:1 }}>
-            <Box sx={{  bgcolor: '#FAFAFB', width:'100%', height:'100%',maxHeight: 'calc(100vh - 108px)', overflow:'auto',border: '1px solid rgba(0, 0, 0, 0.12)', borderRadius: '0 14px 14px 0' }}>
-              {children}
-            </Box>
+            {children}
           </Box>
         </Box>
       </Paper>
