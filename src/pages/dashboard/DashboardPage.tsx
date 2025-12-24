@@ -6,13 +6,21 @@ import { AnalysisPanel } from '../../features/dashboard/ui/AnalysisPanel';
 import { AssetOverviewPanel } from '../../features/dashboard/ui/AssetOverviewPanel';
 import { DashboardScrollArea } from '../../features/dashboard/ui/DashboardScrollArea';
 import { dashboardMockData } from '../../features/dashboard/model/dashboardData';
+import { useLoginInfoQuery } from '../../features/auth/hooks/useLoginInfoQuery';
 import { useDashboardStatsQuery } from '../../features/dashboard/hooks/useDashboardStatsQuery';
+import { useDashboardSummaryQuery } from '../../features/dashboard/hooks/useDashboardSummaryQuery';
 import { useElementWidth } from '../../shared/hooks/useElementWidth';
 
 export const DashboardPage = () => {
+  const { data: loginInfo, isLoading: isLoginInfoLoading } = useLoginInfoQuery();
   const { data: remoteStats = [], isLoading } = useDashboardStatsQuery();
+  const currentYear = new Date().getFullYear().toString();
+  const { data: summaryData, isLoading: isSummaryLoading } = useDashboardSummaryQuery(
+    { year: currentYear, type: 'tax', session: loginInfo?.encSession },
+    { enabled: Boolean(currentYear && loginInfo?.encSession) },
+  );
   const [isResizing, setIsResizing] = useState(false);
-  const { ref: analysisRef, width: analysisWidth } = useElementWidth<HTMLDivElement>();
+  const { ref: analysisRef, width: analysisWidth } = useElementWidth<HTMLDivElement>({ debounceMs: 120 });
 
   const {
     assetStats,
@@ -26,6 +34,10 @@ export const DashboardPage = () => {
   } = dashboardMockData;
 
   const stats = remoteStats.length ? remoteStats : assetStats;
+  const updatedLabel = summaryData?.more?.collection_period
+    ? `${summaryData.more.collection_period}`
+    : '2023.08.28  23:12 기준';
+  const assetCount = summaryData?.more?.list?.length ?? 11;
   const isWideAnalysis = analysisWidth > 532;
 
   const handleDownload = useCallback((format: string) => {
@@ -49,10 +61,10 @@ export const DashboardPage = () => {
           <AssetOverviewPanel
             stats={stats}
             summaryStats={summaryStats}
-            updatedLabel="2023.08.28  23:12 기준"
+            updatedLabel={updatedLabel}
             onDownload={handleDownload}
-            assetCount={11}
-            isLoading={isLoading}
+            assetCount={assetCount}
+            isLoading={isLoading || isSummaryLoading || isLoginInfoLoading}
           />
         </DashboardScrollArea>
       </Resizable>

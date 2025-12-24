@@ -1,16 +1,19 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, useRoutes } from 'react-router-dom';
 import { routes } from './routes';
+
+const AppRoutes = () =>
+  useRoutes([
+    ...routes,
+    {
+      path: '*',
+      element: <Navigate to="/" replace />,
+    },
+  ]);
 
 export const AppRouter = () => {
   return (
     <BrowserRouter>
-      <Routes>
-        {routes.map((route) => {
-          const content = route.layout ? route.layout({ children: route.element }) : route.element;
-          return <Route key={route.path} path={route.path} element={content} />;
-        })}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      <AppRoutes />
     </BrowserRouter>
   );
 };

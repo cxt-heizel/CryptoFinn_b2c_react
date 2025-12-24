@@ -1,60 +1,84 @@
-import { ReactElement } from 'react';
+import { Outlet, RouteObject } from 'react-router-dom';
+import { RequireAuth } from '../../features/auth/ui/RequireAuth';
+import { ConnectPage } from '../../pages/connect/ConnectPage';
+import { DashboardPage } from '../../pages/dashboard/DashboardPage';
 import { LandingPage } from '../../pages/landing/LandingPage';
 import { LoginPage } from '../../pages/auth/LoginPage';
-import { DashboardPage } from '../../pages/dashboard/DashboardPage';
-import { ConnectPage } from '../../pages/connect/ConnectPage';
-import { OverseasPage } from '../../pages/overseas/OverseasPage';
 import { MoneysourcePage } from '../../pages/moneysource/MoneysourcePage';
-import { SupportPage } from '../../pages/support/SupportPage';
+import { OverseasPage } from '../../pages/overseas/OverseasPage';
 import { SettingPage } from '../../pages/setting/SettingPage';
+import { SupportPage } from '../../pages/support/SupportPage';
+import { SignupRedirectPage } from '../../pages/auth/SignupRedirectPage';
 import { MainLayout } from '../layout/MainLayout';
 import { PublicLayout } from '../layout/PublicLayout';
 
-export type AppRoute = {
-  path: string;
-  element: ReactElement;
-  layout?: (props: { children: ReactElement }) => ReactElement;
-};
-
-export const routes: AppRoute[] = [
+export const routes: RouteObject[] = [
   {
-    path: '/',
-    element: <LandingPage />,
-    layout: ({ children }) => <PublicLayout>{children}</PublicLayout>,
+    element: (
+      <PublicLayout>
+        <Outlet />
+      </PublicLayout>
+    ),
+    children: [
+      {
+        path: '/',
+        element: <LandingPage />,
+      },
+    ],
   },
   {
-    path: '/login',
-    element: <LoginPage />,
-    layout: ({ children }) => <PublicLayout isSimple={true}>{children}</PublicLayout>,
+    element: (
+      <PublicLayout isSimple>
+        <Outlet />
+      </PublicLayout>
+    ),
+    children: [
+      {
+        path: '/login',
+        element: <LoginPage />,
+      },
+      {
+        path: '/auth/signup',
+        element: <SignupRedirectPage />,
+      },
+    ],
   },
   {
-    path: '/dashboard',
-    element: <DashboardPage />,
-    layout: ({ children }) => <MainLayout>{children}</MainLayout>,
-  },
-  {
-    path: '/connect',
-    element: <ConnectPage />,
-    layout: ({ children }) => <MainLayout>{children}</MainLayout>,
-  },
-  {
-    path: '/overseas',
-    element: <OverseasPage />,
-    layout: ({ children }) => <MainLayout>{children}</MainLayout>,
-  },
-  {
-    path: '/moneysource',
-    element: <MoneysourcePage />,
-    layout: ({ children }) => <MainLayout>{children}</MainLayout>,
-  },
-  {
-    path: '/support',
-    element: <SupportPage />,
-    layout: ({ children }) => <MainLayout>{children}</MainLayout>,
-  },
-  {
-    path: '/setting',
-    element: <SettingPage />,
-    layout: ({ children }) => <MainLayout>{children}</MainLayout>,
+    element: <RequireAuth />,
+    children: [
+      {
+        element: (
+          <MainLayout>
+            <Outlet />
+          </MainLayout>
+        ),
+        children: [
+          {
+            path: '/dashboard',
+            element: <DashboardPage />,
+          },
+          {
+            path: '/connect',
+            element: <ConnectPage />,
+          },
+          {
+            path: '/overseas',
+            element: <OverseasPage />,
+          },
+          {
+            path: '/moneysource',
+            element: <MoneysourcePage />,
+          },
+          {
+            path: '/support',
+            element: <SupportPage />,
+          },
+          {
+            path: '/setting',
+            element: <SettingPage />,
+          },
+        ],
+      },
+    ],
   },
 ];

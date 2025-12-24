@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { Box, BoxProps, Typography, TypographyProps } from '@mui/material';
 import { Align, flexAlign, textAlign } from '../tokens/align';
 
-export type TextBlockSize = 'default' | 'lg';
+export type TextBlockSize = 'default' | 'lg' | 'sm';
 
 type SlotProps = {
   root?: BoxProps;
@@ -44,6 +44,13 @@ const sizeTokens: Record<
     titleSx: { fontSize: 22, fontWeight: 600 },
     descSx: { fontSize: 14, fontWeight: 400 },
   },
+  sm: {
+    gap: .5, // 8px
+    titleVariant: 'subtitle1',
+    descVariant: 'body2',
+    titleSx: { fontSize: 14, fontWeight: 600 },
+    descSx: { fontSize: 12, fontWeight: 400 },
+  },
 };
 
 export const TextBlock = ({
@@ -74,9 +81,9 @@ export const TextBlock = ({
         {
           color: 'var(--Color-greyscale-1000)',
           ...commonTypographySx,
+          ...titleSx,
+          ...titleProps.sx,
         },
-        titleSx,
-        titleProps.sx,
       ]}
       data-name="title"
     >
@@ -92,9 +99,9 @@ export const TextBlock = ({
         {
           color: 'var(--Color-greyscale-700)',
           ...commonTypographySx,
+          ...descSx,
+          ...descProps.sx,
         },
-        descSx,
-        descProps.sx,
       ]}
       data-name="description"
     >
@@ -113,8 +120,8 @@ export const TextBlock = ({
           justifyContent: 'center',
           textAlign: textAlign[align],
           gap,
+          ...rootProps.sx,
         },
-        rootProps.sx,
       ]}
       data-name={`align=${align}, titleFirst=${titleFirst}, size=${size}`}
       data-node-id="4550:7343"

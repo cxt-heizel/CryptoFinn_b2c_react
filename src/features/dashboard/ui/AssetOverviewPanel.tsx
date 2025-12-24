@@ -1,4 +1,4 @@
-import { Box, Divider, Grid, Typography } from '@mui/material';
+import { Box, Divider, Grid, Typography, FormGroup, FormControlLabel, Switch } from '@mui/material';
 import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import SyncRoundedIcon from '@mui/icons-material/SyncRounded';
@@ -66,7 +66,12 @@ export const AssetOverviewPanel = ({
       </AssetToolBar>
       <Divider />
       <DayAssetsCharts>
-        <TextBlock title="151,043,961원" desc="전체 보유자산" size="lg" titleFirst={false} />
+        <Box sx={{display:'flex', justifyContent:'space-between'}}>
+          <TextBlock title="151,043,961원" desc="전체 보유자산" size="lg" titleFirst={false} />
+          <FormGroup>
+            <FormControlLabel control={<Switch size="small"/>} label="소액자산 숨기기" />
+          </FormGroup>
+        </Box>
         <Divider />
         <DashboardCharts stats={stats} loading={isLoading} />
       </DayAssetsCharts>
@@ -110,13 +115,26 @@ export const AssetOverviewPanel = ({
           ))}
         </Grid>
         <SectionTitle>
-          <Box sx={{ display: 'flex', gap: 1 }}>
+          <Box sx={{ display: 'flex', justifyContent:'space-between', alignItems:'center' }}>
+            <Box sx={{ display: 'flex', gap: 1 }}>
             <Typography variant="h3" color="var(--Color-greyscale-1000)">
               거래자산
             </Typography>
             <Typography variant="h3" color="var(--Color-greyscale-500)">
               {assetCount}
             </Typography>
+            </Box>
+            <Box>
+              <AppDropdownMenuButton
+                defaultLabel="거래금액"
+                options={[
+                  { label: '거래금액', value: 'amount' },
+                  { label: '거래횟수', value: 'count' },
+                  { label: '코인명', value: 'coinname' },
+                ]}
+                onSelect={(option) => onDownload(option.value)}
+              />
+            </Box>
           </Box>
         </SectionTitle>
         <DayAssetsCharts>

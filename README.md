@@ -2,6 +2,22 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## API & CSRF usage
+
+- Dev server proxies `/csrf`, `/dashboard`, `/api`, `/auth` to `https://dev-www.cryptofinn.io` with cookies rewritten to `localhost`.
+- Use `apiFetch` from `src/shared/api/http.ts` for POST/PUT/PATCH/DELETE calls; it auto-attaches the CSRF token to JSON bodies and sends cookies.
+- Fetch a token once via `fetchCsrfToken`/`ensureCsrfToken` in `src/shared/api/csrf.ts` when you need manual control.
+- Example:
+
+```ts
+import { apiFetch } from '@/shared/api/http';
+
+const data = await apiFetch('/dashboard/ajax_get_dashboard_summary', {
+  method: 'POST',
+  body: { year: '2024', type: 'tax' },
+});
+```
+
 ## Available Scripts
 
 In the project directory, you can run:

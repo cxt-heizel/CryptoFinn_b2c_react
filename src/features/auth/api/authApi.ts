@@ -1,10 +1,13 @@
-import { apiClient } from '../../../shared/api/client';
-import { LoginPayload, AuthUser } from '../model/types';
+import { clearCachedCsrfToken } from '../../../shared/api/csrf';
+import { apiFetch } from '../../../shared/api/http';
+import { LoginPayload, AuthUser, LoginInfoResponse } from '../model/types';
 
 export const login = async (payload: LoginPayload) => {
   try {
-    const { data } = await apiClient.post<{ token: string; user: AuthUser }>('/auth/login', payload);
-    return data;
+    return await apiFetch<{ token: string; user: AuthUser }>('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify([]),
+    });
   } catch (error) {
     console.warn('Using fallback login response because /auth/login is unavailable.', error);
     return {
@@ -15,15 +18,36 @@ export const login = async (payload: LoginPayload) => {
 };
 
 export const logout = async () => {
-  await apiClient.post('/auth/logout');
+  await apiFetch('/auth/logout', { method: 'POST' });
+  clearCachedCsrfToken();
 };
 
 export const fetchMe = async () => {
   try {
-    const { data } = await apiClient.get<AuthUser>('/auth/me');
-    return data;
+    return await apiFetch<AuthUser>('/auth/me');
   } catch (error) {
     console.warn('Using fallback user because /auth/me is unavailable.', error);
     return { id: 'demo', name: 'Demo User', email: 'demo@example.com' } satisfies AuthUser;
+  }
+};
+
+export const fetchLoginInfo = async () => {
+  try {
+    return await apiFetch<LoginInfoResponse>('/auth/login_info', { method: 'POST', body: [] });
+  } catch (error) {
+    if (import.meta.env.DEV) {
+      console.warn('Using fallback login_info because /auth/login_info is unavailable.', error);
+      return {
+        encSession: 'dev-session',
+        user: {
+          signup_path: 'KAKAO',
+          auth_sns: 'NICE',
+          auth_id: 'dev-auth-id',
+          email: 'dev@example.com',
+        },
+      } satisfies LoginInfoResponse;
+    }
+
+    throw error;
   }
 };

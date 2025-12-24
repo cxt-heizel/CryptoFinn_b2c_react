@@ -12,5 +12,18 @@ export interface AuthState {
 
 export interface LoginPayload {
   email: string;
-  password: string;
+  password?: string;
+  body?: unknown[];
+}
+
+export interface LoginInfoUser {
+  signup_path: string;
+  auth_sns: string;
+  auth_id: string;
+  email: string;
+}
+
+export interface LoginInfoResponse {
+  encSession: string;
+  user: LoginInfoUser | null;
 }

@@ -19,6 +19,7 @@ export type ItemBlockProps = {
   action?: ReactNode;
   children?: ReactNode;
   slotProps?: SlotProps;
+  size? : string;
 };
 
 export const ItemBlock = ({
@@ -29,6 +30,7 @@ export const ItemBlock = ({
   action,
   children,
   slotProps,
+  size = 'default'
 }: ItemBlockProps) => {
   const rootProps = slotProps?.root ?? {};
   const leftProps = slotProps?.left ?? {};
@@ -95,8 +97,8 @@ export const ItemBlock = ({
           {...avatarProps}
           sx={[
             {
-              width: 40,
-              height: 40,
+              width: size === 'sm' ? 34 : 40,
+              height: size === 'sm' ? 34 : 40,
               bgcolor: 'var(--Color-greyscale-400)',
               borderRadius: 100,
               display: 'flex',
@@ -125,7 +127,7 @@ export const ItemBlock = ({
           title={title}
           desc={desc}
           align="left"
-          size="default"
+          size={size}
           nowrap
           slotProps={{
             ...textBlockSlotProps,

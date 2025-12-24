@@ -14,7 +14,7 @@ export const LoginPage = () => {
     setTimeout(() => {
       setIsLoading(false);
       location.href = '/dashboard';
-    }, 5000);
+    }, 1000);
   };
 
   return (

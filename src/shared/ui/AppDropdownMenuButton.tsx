@@ -3,6 +3,8 @@ import { Button, ButtonProps, Menu, MenuItem, useTheme } from '@mui/material';
 import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 
+import { AppButton } from './AppButton';
+
 export type AppDropdownMenuButtonOption = {
   label: string;
   value: string;
@@ -100,7 +102,7 @@ export const AppDropdownMenuButton: React.FC<AppDropdownMenuButtonProps> = ({
 
   return (
     <>
-      <Button
+      <AppButton
         {...buttonProps}
         ref={buttonRef}
         variant={buttonProps?.variant ?? 'outlined'}
@@ -123,7 +125,7 @@ export const AppDropdownMenuButton: React.FC<AppDropdownMenuButtonProps> = ({
         }
       >
         {label}
-      </Button>
+      </AppButton>
       <Menu
         id={menuId}
         anchorEl={menuAnchor}

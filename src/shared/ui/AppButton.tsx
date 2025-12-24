@@ -19,7 +19,7 @@ export const AppButton = ({ isRounded, outlinedColor, sx, variant, color, ...pro
             ...(outlinedColor
               ? { borderColor: outlinedColor }
               : color === 'primary' || color === undefined
-                ? { borderColor: '#E6E6EA' }
+                ? { borderColor: 'rgba(0, 0, 0, 0.12)' }
                 : {}),
           },
         ]

@@ -8,16 +8,22 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Skeleton,
   Tooltip,
 } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
-import { ReactElement, ReactNode, cloneElement, isValidElement, useState } from 'react';
+import { ReactElement, ReactNode, cloneElement, isValidElement, useEffect, useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/ChevronLeft';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { useTheme } from '@mui/material/styles';
+
+import { useLoginInfoQuery } from '../../features/auth/hooks/useLoginInfoQuery';
+import { ItemBlock } from './ItemBlock';
+import { TextBlock } from './TextBlock';
 
 export type AppMenuItem = {
   key: string;
@@ -45,23 +51,28 @@ interface Props {
 }
 
 const drawerWidth = 296;
+const collapsedDrawerWidth = 92;
+
+const createDrawerTransition = (theme: Theme) =>
+  theme.transitions.create(['transform', 'width'], {
+    easing: theme.transitions.easing.easeInOut,
+    duration: theme.transitions.duration.standard,
+  });
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
-  transition: theme.transitions.create('width', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
+  transition: createDrawerTransition(theme),
   overflowX: 'hidden',
+  transform: 'translateZ(0)',
+  willChange: 'transform, width',
 });
 
 const closedMixin = (theme: Theme): CSSObject => ({
-  transition: theme.transitions.create('width', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
+  transition: createDrawerTransition(theme),
   overflowX: 'hidden',
-  width: 92,
+  width: collapsedDrawerWidth,
+  transform: 'translateZ(0)',
+  willChange: 'transform, width',
 });
 
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -82,6 +93,77 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
         '& .MuiDrawer-paper': { ...closedMixin(theme), position: 'relative', height: '100%', borderRight: 'none', },
       }),
 }));
+
+const createItemButtonSx = (open: boolean) => (theme: Theme) => ({
+  borderRadius: 1,
+  minHeight: 60,
+  gap: open ? 1 : 0,
+  transform: 'translateZ(0)',
+  willChange: 'transform, background-color',
+  transition: theme.transitions.create(['background-color', 'transform'], {
+    easing: theme.transitions.easing.easeInOut,
+    duration: theme.transitions.duration.shorter,
+  }),
+});
+
+const createItemIconSx = (open: boolean) => (theme: Theme) => ({
+  position:'relative',
+  minWidth: 0,
+  maxWidth: 24,
+  justifyContent: 'center',
+  mr: open ? 0.75 : 0,
+  transform: open ? 'translateX(0px) translateY(0px)' : 'translateX(4px) translateY(-10px)',
+  willChange: 'transform',
+  transition: theme.transitions.create(['transform', 'mr'], {
+    easing: theme.transitions.easing.easeInOut,
+    duration: theme.transitions.duration.shorter,
+  }),
+});
+
+
+
+
+const createUtilityButtonSx = (open: boolean) => (theme: Theme) => ({
+  ...createItemButtonSx(open)(theme),
+  minHeight: 44,
+  height: 44,
+
+});
+
+const createUtilItemIconSx = (open: boolean) => (theme: Theme) => ({
+  position:'relative',
+  minWidth: 0,
+  maxWidth: 24,
+  justifyContent: 'center',
+  mr: open ? 0.75 : 0,
+  transform: open ? 'translateX(0px)' : 'translateX(4px)',
+  willChange: 'transform',
+  transition: theme.transitions.create(['transform', 'mr'], {
+    easing: theme.transitions.easing.easeInOut,
+    duration: theme.transitions.duration.shorter,
+  }),
+});
+
+const createItemTextSx = (open: boolean) => (theme: Theme) => ({
+  flexGrow: open ? 1 : 0,
+  minWidth: 0,
+  opacity: open ? 1 : 0,
+  maxWidth: open ? '100%' : 0,
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  transform: open ? 'translateX(0)' : 'translateX(-8px)',
+  willChange: 'transform, opacity',
+  transition: [
+    theme.transitions.create('transform', {
+      easing: theme.transitions.easing.easeInOut,
+      duration: theme.transitions.duration.shorter,
+    }),
+    theme.transitions.create(['opacity', 'max-width'], {
+      easing: theme.transitions.easing.easeInOut,
+      duration: open ? 0 : theme.transitions.duration.shorter,
+    }),
+  ].join(', '),
+});
 
 const defaultSections: AppMenuSection[] = [
   {
@@ -122,9 +204,33 @@ const defaultUtilSections: UtilMenuSection[] = [
   },
 ];
 
+
+
 export const AppMenu = ({ sections = defaultSections,utilsections = defaultUtilSections, open: openProp, defaultOpen = false, onToggle }: Props) => {
+  
+  const { data: loginInfo, isLoading: isLoginInfoLoading } = useLoginInfoQuery();
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
   const open = openProp ?? uncontrolledOpen;
+  const theme = useTheme();
+  const collapseDuration = theme.transitions.duration.standard;
+  const [contentOpen, setContentOpen] = useState(open);
+  const user = loginInfo?.user;
+  
+  useEffect(() => {
+    let timer: number | undefined;
+    if (open) {
+      setContentOpen(true);
+    } else if (contentOpen) {
+      timer = window.setTimeout(() => setContentOpen(false), collapseDuration);
+    } else {
+      setContentOpen(false);
+    }
+    return () => {
+      if (timer !== undefined) {
+        window.clearTimeout(timer);
+      }
+    };
+  }, [open, contentOpen, collapseDuration]);
 
   const handleToggle = () => {
     const next = !open;
@@ -145,13 +251,27 @@ export const AppMenu = ({ sections = defaultSections,utilsections = defaultUtilS
   return (
     <Drawer variant="permanent" open={open}>
       <Box sx={{ flex: 1, display:'flex', flexDirection:'column', px: 2, py: 3, gap: 1.5}}>
-        <Box sx={{ display:'flex', flexDirection:'column', alignItems: open ? 'flex-end':'center', px:1,py:'10px'}}>
-
-          <Tooltip title={open ? '메뉴 접기' : '메뉴 펼치기'}>
-            <IconButton onClick={handleToggle} size="medium" sx={{borderRadius:1, bgcolor: open ? '#fff' : '#F2F4F6' }}>
+        <Box sx={{ px:1,py:'10px', minHeight: 72, position: 'relative'}}>
+          <Box sx={{display: contentOpen ? 'flex' : 'none', opacity: open? 1:0 , position:'absolute', left: '8px', top: '21px'}}>
+            {isLoginInfoLoading ? (
+              <Skeleton variant="rounded" width={180} height={40} />
+            ) : user ? (
+              <TextBlock title={user.email} desc={user.signup_path} size='sm' />
+            ) : null}
+          </Box>
+          <Box sx={{
+            position:'absolute', 
+            right:'8px',
+            top: '16px', 
+            transform: open ? 'translateX(0px)':'translateX(-3px)',
+          }}>
+            <IconButton onClick={handleToggle} size="medium" sx={{
+              borderRadius:1, 
+              bgcolor: contentOpen ? '#fff' : '#F2F4F6' , 
+              }}>
               {open ? <MenuOpenIcon /> : <MenuIcon />}
             </IconButton>
-          </Tooltip>
+          </Box>
         </Box>
         <Box sx={{ flexGrow:1 ,display:'flex', flexDirection:'column', justifyContent: 'space-between', alignItems:'center', }}>
           <Box sx={{width:'100%', position:'relative'}}>      
@@ -163,23 +283,11 @@ export const AppMenu = ({ sections = defaultSections,utilsections = defaultUtilS
                       <ListItemButton
                         selected={item.selected}
                         onClick={item.onClick}
-                        sx={{
-                          borderRadius:1,
-                          minHeight: 60,
-                          display: open ? 'grid' : 'flex',
-                          gridTemplateColumns: '24px 1fr',
-                          justifyContent: open ? 'initial' : 'center',
-                          flexDirection: open ? 'row' : 'column',
-                          alignItems: 'center',
-                          gap: open ? 2 : 'unset',
-                        }}
+                        sx={createItemButtonSx(contentOpen)}
                       >
                         {item.icon ? (
                           <ListItemIcon
-                            sx={{
-                              justifyContent: 'center',
-                              minWidth: 'unset'
-                            }}
+                            sx={createItemIconSx(open)}
                           >
                             {renderIcon(item.icon)}
                           </ListItemIcon>
@@ -187,17 +295,47 @@ export const AppMenu = ({ sections = defaultSections,utilsections = defaultUtilS
                         <ListItemText
                           primary={item.label}
                           sx={{
-                            display: 'flex',
-                            textAlign: open ? 'left' : 'center',
-                            // width: '100%',
-                            justifyContent: open ? 'flex-start':'center',
-                            alignItems: 'center'
+                            position: 'absolute',
+                            left:52,
                           }}
                           primaryTypographyProps={{
-                            fontSize: open ? 14 : 11,
-                            fontWeight: open ? 700 : 600,
-                            color: item.selected ? '#6D7582' : open ? '#505866' : '#A8AFB7',
-                            lineHeight:'normal'
+                            sx: {
+                              opacity: open ? 1:0,
+                              display: contentOpen ? 'block':'none',
+                              fontSize: 14,
+                              fontWeight: 600,
+                              color: item.selected ? '#6D7582' : '#505866',
+                              lineHeight:'normal',
+                              transition: theme.transitions.create(['opacity'], {
+                                easing: theme.transitions.easing.easeInOut,
+                                duration: theme.transitions.duration.shorter,
+                              }),
+                            },
+                          }}
+                        />
+                        <ListItemText
+                          primary={item.label}
+                          sx={{
+                            position: 'absolute',
+                            bottom: '6px',
+                            left:0,
+                            width: '100%',
+                            maxWidth: 60
+                          }}
+                          primaryTypographyProps={{
+                            sx: {
+                              opacity: open ? 0:1,
+                              display: open ? 'none':'block',
+                              fontSize: 11,
+                              fontWeight: 600,
+                              textAlign:'center',
+                              color: item.selected ? '#6D7582' : '#A8AFB7',
+                              lineHeight: 'normal',
+                              transition: theme.transitions.create(['opacity'], {
+                                easing: theme.transitions.easing.easeInOut,
+                                duration: theme.transitions.duration.shorter,
+                              }),
+                            },
                           }}
                         />
                       </ListItemButton>
@@ -209,7 +347,7 @@ export const AppMenu = ({ sections = defaultSections,utilsections = defaultUtilS
             ))}
           </Box>
           <Box sx={{width:'100%', position:'relative'}}>      
-          {utilsections.map((section, index) => (
+          {utilsections.map((section) => (
             <Box key={section.id}>
               <List sx={{display:'grid',gap: '4px', p:0}}>
                 {section.items.map((item) => (
@@ -217,44 +355,36 @@ export const AppMenu = ({ sections = defaultSections,utilsections = defaultUtilS
                     <ListItemButton
                       selected={item.selected}
                       onClick={item.onClick}
-                      sx={{
-                        borderRadius:1,
-                        minHeight: 44,
-                        height: 44,
-                        display: open ? 'grid' : 'flex',
-                        gridTemplateColumns: '24px 1fr',
-                        justifyContent: open ? 'initial' : 'center',
-                        flexDirection: open ? 'row' : 'column',
-                        alignItems: 'center',
-                        gap: open ? 2 : 'unset',
-                      }}
+                      sx={createUtilityButtonSx(open)}
                     >
                       {item.icon ? (
                         <ListItemIcon
-                          sx={{
-                            minWidth: 0,
-                            justifyContent: 'center',
-                          }}
+                          sx={createUtilItemIconSx(open)}
                         >
-                          {item.icon}
+                          {renderIcon(item.icon)}
                         </ListItemIcon>
                       ) : null}
                       <ListItemText
-                        primary={item.label}
-                        sx={{
-                          display: open ? 'flex' : 'none',
-                          textAlign: 'left',
-                          justifyContent: 'flex-start',
-                          alignItems: 'center',
-                          opacity: open ? 1 :0,
-                        }}
-                        primaryTypographyProps={{
-                          fontSize: 14,
-                          fontWeight: 700,
-                          color: item.selected ? '#6D7582' : open ? '#505866' : '#A8AFB7',
-                          lineHeight:'normal'
-                        }}
-                      />
+                          primary={item.label}
+                          sx={{
+                            position: 'absolute',
+                            left:52,
+                          }}
+                          primaryTypographyProps={{
+                            sx: {
+                              opacity: open ? 1:0,
+                              display: contentOpen ? 'block':'none',
+                              fontSize: 14,
+                              fontWeight: 700,
+                              color: item.selected ? '#6D7582' : '#A8AFB7',
+                              lineHeight:'normal',
+                              transition: theme.transitions.create(['opacity'], {
+                                easing: theme.transitions.easing.easeInOut,
+                                duration: theme.transitions.duration.shorter,
+                              }),
+                            },
+                          }}
+                        />
                     </ListItemButton>
                   </ListItem>
                 ))}
