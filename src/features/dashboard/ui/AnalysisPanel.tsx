@@ -1,21 +1,17 @@
-import { Children, ReactNode, useCallback, useMemo } from 'react';
-import { Box, Divider, Stack, SxProps, Theme, Typography } from '@mui/material';
+import { Children, useCallback, useMemo } from 'react';
+import { Box, Divider, Stack, Typography } from '@mui/material';
 import {
-  Area,
   Bar,
   BarChart,
   CartesianGrid,
   Cell,
   LabelList,
-  Line,
-  LineChart,
   Pie,
   PieChart,
   PolarAngleAxis,
   RadialBar,
   RadialBarChart,
   ReferenceLine,
-  ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
@@ -23,32 +19,49 @@ import {
   LabelProps,
 } from 'recharts';
 import { TextBlock } from '../../../shared/ui/TextBlock';
-import { useElementWidth } from '../../../shared/hooks/useElementWidth';
 import {
+  AXIS_TICK_STYLE,
+  BAR_CHART_MARGIN,
+  ChartCard,
+  ChartContainer,
+  DEFAULT_BAR_SIZE,
+  FAVORITE_CHART_WIDTH,
+} from './chartPrimitives';
+import { TransactionsChart } from './charts/TransactionsChart';
+import {
+  YearlyDatum,
   BestExchangeDatum,
   FavoriteChartDatum,
-  IncomeChartDatum,
   MostCoinDatum,
   RankBar,
   TransactionChartDatum,
+  IncomeDatum,
+  FavoriteDatum,
 } from '../model/dashboardData';
 import { SectionTitle } from './SectionTitle';
+import { IncomeChart } from './charts/IncomeChart';
+import { FavoriteChart } from './charts/favoriteChart';
 
 type Props = {
   isWide: boolean;
+  yearly : YearlyDatum[];
+  yearlyLoading?: boolean;
+  yearlyError?: unknown;
+  onRefetchYearly?: () => void;
+  income : IncomeDatum | null ;
+  incomeLoading?: boolean;
+  incomeError?: unknown;
+  onRefetchIncome?: () => void;
+  favorite : FavoriteDatum | null ;
+  FavoriteLoading : boolean;
+  favoriteError : unknown;
+  refetchFavorite : () => void;
   transactions: TransactionChartDatum[];
-  income: IncomeChartDatum[];
   favorites: FavoriteChartDatum[];
   bestExchanges: BestExchangeDatum[];
   topHoldings: MostCoinDatum[];
   ranks: RankBar[];
 };
-
-const AXIS_TICK_STYLE = { fill: 'var(--Color-greyscale-800)', fontSize: 14 } as const;
-const LINE_CHART_MARGIN = { top: 12, right: 12, left: 0, bottom: 12 } as const;
-const BAR_CHART_MARGIN = { top: 20, right: 16, left: 8, bottom: 12 } as const;
-const DEFAULT_BAR_SIZE = 120;
-const FAVORITE_CHART_WIDTH = 319;
 
 type ChartLabelProps<TPayload> = LabelProps & {
   x?: number;
@@ -58,40 +71,6 @@ type ChartLabelProps<TPayload> = LabelProps & {
   index?: number;
   value?: number | string;
   payload?: TPayload;
-};
-
-const ChartCard = ({ id, children, sx }: { id?: string; children: ReactNode; sx?: SxProps<Theme> }) => (
-  <Box sx={{ p: 2, flex: 1, ...sx }} id={id}>
-    {children}
-  </Box>
-);
-
-const ChartContainer = ({
-  height,
-  children,
-  sx,
-}: {
-  height: number;
-  children: ReactNode;
-  sx?: SxProps<Theme>;
-}) => {
-  const { ref, width } = useElementWidth<HTMLDivElement>({ debounceMs: 120 });
-  const isReady = width > 0 && height > 0;
-
-  return (
-    <Box ref={ref} sx={{ height, width: '100%', minWidth: 0, ...sx }}>
-      {isReady && (
-        <ResponsiveContainer
-          width="100%"
-          height="100%"
-          initialDimension={{ width, height }}
-          minWidth={1}
-        >
-          {children}
-        </ResponsiveContainer>
-      )}
-    </Box>
-  );
 };
 
 const SplitSection = ({ isWide, children }: { isWide: boolean; children: ReactNode }) => {
@@ -167,19 +146,31 @@ const renderBubbleLabel = ({
 
 export const AnalysisPanel = ({
   isWide,
-  transactions,
+  yearly,
+  yearlyLoading = false,
+  yearlyError = null,
+  onRefetchYearly,
   income,
+  incomeLoading = false,
+  incomeError = null,
+  onRefetchIncome,
+  favorite,
+  FavoriteLoading = false,
+  favoriteError = null,
+  refetchFavorite,
+  transactions,
   favorites,
   bestExchanges,
   topHoldings,
   ranks,
 }: Props) => {
+
   const favoriteRate = useMemo(() => favorites[0]?.value ?? 0, [favorites]);
   const incomeLabelColors = useMemo(
     () => ['var(--Color-greyscale-800)', 'var(--Color-greyscale-000)'],
     [],
   );
-  const hasIncome = income.length > 0;
+  const hasIncome = income !== null;
   const hasFavorites = favorites.length > 0;
   const hasBestExchanges = bestExchanges.length > 0;
   const hasTopHoldings = topHoldings.length > 0;
@@ -276,73 +267,28 @@ export const AnalysisPanel = ({
           py: isWide ? 2 : 1.5,
         }}
       >
-        <ChartCard id="transactions-chart">
-          <TextBlock title="13,564건" desc="수집된 거래내역" size="lg" titleFirst={false} />
-          <Typography sx={{ mt: 0.8 }} variant="body1" color="var(--Color-greyscale-1000)">
-            최저 2021년 | 최고 2023년
-          </Typography>
-          <ChartContainer height={260}>
-            <LineChart data={transactions} margin={LINE_CHART_MARGIN}>
-              <CartesianGrid strokeDasharray="4 6" stroke="var(--Color-greyscale-300)" />
-              <XAxis dataKey="year" tick={AXIS_TICK_STYLE} axisLine={false} tickLine={false} />
-              <YAxis hide />
-              <Tooltip cursor={false} />
-              <Line
-                type="monotone"
-                dataKey="value"
-                stroke="var(--Color-greyscale-600)"
-                strokeWidth={2}
-                dot={false}
-                activeDot={false}
-                isAnimationActive={false}
-              />
-              <Area
-                type="monotone"
-                dataKey="value"
-                stroke="none"
-                fill="var(--Color-greyscale-300)"
-                fillOpacity={0.22}
-                isAnimationActive={false}
-              />
-            </LineChart>
-          </ChartContainer>
-        </ChartCard>
+        <TransactionsChart
+          yearly={yearly}
+          isLoading={yearlyLoading}
+          error={yearlyError}
+          onRetry={onRefetchYearly}
+        />
+        <Divider />
+        <IncomeChart
+          income={income}
+          isLoading={incomeLoading}
+          error={incomeError}
+          onRetry={onRefetchIncome}
+        />
+        <Divider />
+        <FavoriteChart
+          data={favorite}
+          isLoading={FavoriteLoading}
+          error={favoriteError}
+          onRetry={refetchFavorite}
+        />
         <Divider />
         <SplitSection isWide={isWide}>
-          <ChartCard id="income-chart">
-            <TextBlock title="513,258,147원" desc="지금까지의 총 소득은?" size="lg" titleFirst={false} />
-            <Typography sx={{ mt: 0.8 }} variant="body1" color="var(--Color-greyscale-1000)">
-              최저소득 2021년 | 최고소득 2023년
-            </Typography>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              {hasIncome ? (
-                <ChartContainer height={320} sx={{ maxWidth: FAVORITE_CHART_WIDTH, width: '100%', mt: 3 }}>
-                  <BarChart data={income} margin={BAR_CHART_MARGIN}>
-                    <CartesianGrid vertical={false} strokeDasharray="3 6" stroke="var(--Color-greyscale-200)" />
-                    <XAxis dataKey="year" tick={AXIS_TICK_STYLE} axisLine={false} tickLine={false} />
-                    <YAxis hide domain={[0, 'dataMax + 200']} />
-                    <Tooltip cursor={false} />
-                    <Bar
-                      dataKey="value"
-                      radius={[14, 14, 14, 14]}
-                      barSize={DEFAULT_BAR_SIZE}
-                      label={renderIncomeLabel}
-                      isAnimationActive={false}
-                    >
-                      {income.map((entry, i) => (
-                        <Cell key={entry.year} fill={i === 0 ? 'var(--Color-greyscale-300)' : 'var(--Color-greyscale-800)'} />
-                      ))}
-                      <LabelList dataKey="value" content={renderIncomeValueLabel} />
-                    </Bar>
-                  </BarChart>
-                </ChartContainer>
-              ) : (
-                <Typography sx={{ mt: 3 }} color="var(--Color-greyscale-600)">
-                  소득 데이터가 없습니다.
-                </Typography>
-              )}
-            </Box>
-          </ChartCard>
           <ChartCard id="favorit-chart">
             <TextBlock title="바이낸스" desc="내 최애 거래소는?" size="lg" titleFirst={false} />
             <Typography sx={{ mt: 0.8 }} variant="body1" color="var(--Color-greyscale-1000)">

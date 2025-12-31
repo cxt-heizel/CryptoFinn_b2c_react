@@ -22,15 +22,6 @@ export const logout = async () => {
   clearCachedCsrfToken();
 };
 
-export const fetchMe = async () => {
-  try {
-    return await apiFetch<AuthUser>('/auth/me');
-  } catch (error) {
-    console.warn('Using fallback user because /auth/me is unavailable.', error);
-    return { id: 'demo', name: 'Demo User', email: 'demo@example.com' } satisfies AuthUser;
-  }
-};
-
 export const fetchLoginInfo = async () => {
   try {
     return await apiFetch<LoginInfoResponse>('/auth/login_info', { method: 'POST', body: [] });

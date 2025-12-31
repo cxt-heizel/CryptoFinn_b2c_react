@@ -15,7 +15,6 @@ import styled from '@emotion/styled';
 type Props = {
   stats: DashboardStat[];
   summaryStats: SummaryStat[];
-  updatedLabel: string;
   onDownload: (format: string) => void;
   yearLabel?: string;
   assetCount?: number;
@@ -25,7 +24,6 @@ type Props = {
 export const AssetOverviewPanel = ({
   stats,
   summaryStats,
-  updatedLabel,
   onDownload,
   yearLabel = '2025년',
   assetCount = 11,
@@ -48,7 +46,7 @@ export const AssetOverviewPanel = ({
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'var(--Color-greyscale-800)' }}>
             <Typography variant="subtitle1" sx={{ whiteSpace: 'nowrap' }}>
-              {updatedLabel}
+              {/* {updatedLabel} */}
             </Typography>
             <SyncRoundedIcon fontSize="inherit" />
           </Box>

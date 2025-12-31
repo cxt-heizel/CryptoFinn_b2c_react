@@ -1,12 +1,18 @@
 export interface DashboardStat {
   label: string;
   value: number | string;
-  trend?: number;
 }
 
 export interface DashboardSummaryRequest {
   year: string;
   type: string;
+  session?: string;
+}
+
+
+
+export interface DashboardSummaryTypeRequest {
+  year: string;
   session?: string;
 }
 

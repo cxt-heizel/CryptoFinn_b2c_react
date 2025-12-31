@@ -1,17 +1,56 @@
 import { DashboardStat } from './types';
 
 export type SummaryStat = { title: string; desc: string };
-export type TransactionChartDatum = { year: string; value: number };
-export type IncomeChartDatum = { year: string; value: number; label: string; showLabel: boolean };
+
+export type YearlyDatum = { year: string; count: number, amount: number };
+
+export type IncomeDatum = { 
+  total : number;
+  min_income_year : number;
+  max_income_year : number;
+  min_income : number;
+  max_income : number;
+};
+
+export type FavoriteDatum = {
+  list: {
+    name: {
+      ko: number;
+      en: number;
+    };
+    user_id: number;
+    count: number;
+    ratio: number;
+  };
+  nickname: NicknameItem[];
+};
+
+export type NicknameItem = {
+  seq: number;
+  nickname: string;
+  en_name: string;
+  ko_name: string;
+};
+
+export type TransactionChartDatum = { year: string; value: number};
 export type FavoriteChartDatum = { name: string; value: number };
 export type BestExchangeDatum = { name: string; value: number; label: string; barColor: string; showBubble: boolean };
 export type MostCoinDatum = { name: string; value: number; color: string };
 export type RankBar = { key: string; width: number; offset: number; highlight: boolean };
 
-export const dashboardAssetStats: DashboardStat[] = Array.from({ length: 12 }, () => ({
-  label: '134,545,432원',
+export const dashboardAssetStats: DashboardStat[] = Array.from({ length: 4 }, (temp,index) => ({
+  label: '미친 뭐 어쩌라고'+index,
   value: '88.88888888 | 32%',
 }));
+
+export const YearlyData: YearlyDatum[]  = [
+  { year: '2020', count: 0, amount: 0 },
+  { year: '2021', count: 0, amount: 0 },
+  { year: '2022', count: 0, amount: 0 },
+  { year: '2023', count: 0, amount: 0 },
+  { year: '2024', count: 0, amount: 0 },
+  { year: '2025', count: 0, amount: 0 },
+]
 
 export const summaryStats: SummaryStat[] = [
   { title: '+1,009,890 원', desc: '실현손익' },
@@ -26,11 +65,6 @@ export const transactionChartData: TransactionChartDatum[] = [
   { year: '2023', value: 2100 },
   { year: '2024', value: 1160 },
   { year: '2025', value: 2500 },
-];
-
-export const incomeChartData: IncomeChartDatum[] = [
-  { year: '2021', value: 520, label: '520만원', showLabel: false },
-  { year: '2023', value: 1480, label: '1,480만원', showLabel: true },
 ];
 
 export const favoriteChartData: FavoriteChartDatum[] = [{ name: '바이낸스', value: 32 }];
@@ -57,9 +91,9 @@ export const rankBars: RankBar[] = [
 
 export const dashboardMockData = {
   assetStats: dashboardAssetStats,
+  YearlyData,
   summaryStats,
   transactionChartData,
-  incomeChartData,
   favoriteChartData,
   bestExchangeData,
   mostCoinData,
