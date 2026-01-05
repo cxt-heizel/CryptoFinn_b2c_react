@@ -119,7 +119,7 @@ export const useDashboardExchangeQuery = (
   return useQuery({
     queryKey: ['dashboard', 'summary', paramsWithType.year, paramsWithType.type],
     queryFn: () => fetchDashboardSummary(paramsWithType, headers),
-    select: (data) => data.more.list,
+    select: (data) => ({ list: data.more.list, nicknames: data.nickname_list }),
     enabled: enabled && Boolean(paramsWithType.year) && Boolean(sessionKey),
     refetchOnWindowFocus: false,
     retry: false,

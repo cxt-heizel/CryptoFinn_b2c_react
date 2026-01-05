@@ -18,7 +18,7 @@ export const login = async (payload: LoginPayload) => {
 };
 
 export const logout = async () => {
-  await apiFetch('/auth/logout', { method: 'POST' });
+  await apiFetch('/auth/logout', { method: 'GET' });
   clearCachedCsrfToken();
 };
 

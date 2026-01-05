@@ -34,12 +34,12 @@ export type NicknameItem = {
 
 export type TransactionChartDatum = { year: string; value: number};
 export type FavoriteChartDatum = { name: string; value: number };
-export type BestExchangeDatum = { name: string; value: number; label: string; barColor: string; showBubble: boolean };
+export type BestExchangeDatum = { name: string; value: number; showBubble: boolean };
 export type MostCoinDatum = { name: string; value: number; color: string };
 export type RankBar = { key: string; width: number; offset: number; highlight: boolean };
 
 export const dashboardAssetStats: DashboardStat[] = Array.from({ length: 4 }, (temp,index) => ({
-  label: '미친 뭐 어쩌라고'+index,
+  label: index,
   value: '88.88888888 | 32%',
 }));
 

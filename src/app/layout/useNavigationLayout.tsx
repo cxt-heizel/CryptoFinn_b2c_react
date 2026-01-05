@@ -35,9 +35,9 @@ const navigationSections: NavigationMenuSection[] = [
     id: 'secondary',
     items: [
       {
-        key: 'connect',
-        label: '등록',
-        path: '/connect',
+        key: 'assets',
+        label: '연결',
+        path: '/assets',
         icon: <AddCircleOutlineSharpIcon />,
       },
       {
@@ -93,7 +93,7 @@ const appBarChildrenByMenu: Partial<Record<string, ReactNode>> = {
       거래 데이터를 추가할수록 정확한 데이터를 확인할 수 있어요
     </Typography>
   ),
-  connect: (
+  assets: (
     <AppButton variant="contained">
       데이터 연결하기
     </AppButton>

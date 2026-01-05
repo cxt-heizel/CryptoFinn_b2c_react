@@ -39,7 +39,6 @@ const useExchangeUsage = (favorite: FavoriteDatum | null): ExchangeUsage | null 
 
     const count = Number.isFinite(list.count) ? list.count : 0;
     let ratio = Number.isFinite(list.ratio) ? Math.floor(list.ratio) : 0;
-     ratio = 30
 
     return {
       name: displayName || '알 수 없음',

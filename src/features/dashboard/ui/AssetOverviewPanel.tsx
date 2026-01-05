@@ -25,7 +25,7 @@ export const AssetOverviewPanel = ({
   stats,
   summaryStats,
   onDownload,
-  yearLabel = '2025년',
+  yearLabel = '2024년',
   assetCount = 11,
   isLoading,
 }: Props) => {

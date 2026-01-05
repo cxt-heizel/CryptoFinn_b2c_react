@@ -1,9 +1,9 @@
 import { Outlet, RouteObject } from 'react-router-dom';
 import { RequireAuth } from '../../features/auth/ui/RequireAuth';
-import { ConnectPage } from '../../pages/connect/ConnectPage';
 import { DashboardPage } from '../../pages/dashboard/DashboardPage';
 import { LandingPage } from '../../pages/landing/LandingPage';
 import { LoginPage } from '../../pages/auth/LoginPage';
+import { AssetsPage } from '../../pages/assets/AssetsPage';
 import { MoneysourcePage } from '../../pages/moneysource/MoneysourcePage';
 import { OverseasPage } from '../../pages/overseas/OverseasPage';
 import { SettingPage } from '../../pages/setting/SettingPage';
@@ -59,7 +59,11 @@ export const routes: RouteObject[] = [
           },
           {
             path: '/connect',
-            element: <ConnectPage />,
+            element: <AssetsPage />,
+          },
+          {
+            path: '/assets',
+            element: <AssetsPage />,
           },
           {
             path: '/overseas',
