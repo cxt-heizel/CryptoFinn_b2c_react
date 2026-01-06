@@ -7,10 +7,12 @@ import {
   Chip,
   Divider,
   Grid,
+  IconButton,
   Stack,
   TextField,
   Typography,
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { ExchangeMeta, PlatformConnectType } from '../model/types';
 import {
   useConnectApiMutation,
@@ -25,6 +27,7 @@ type Props = {
   exchange: ExchangeMeta;
   session?: string;
   onConnected?: () => void;
+  onClose?: () => void;
 };
 
 const connectTypeLabel: Record<PlatformConnectType, string> = {
@@ -45,7 +48,7 @@ const typeDescription: Partial<Record<PlatformConnectType, string>> = {
   Binance: 'API Key와 거래내역 파일을 함께 등록할 수 있습니다.',
 };
 
-export const ConnectPanel = ({ exchange, session, onConnected }: Props) => {
+export const ConnectPanel = ({ exchange, session, onConnected, onClose }: Props) => {
   const initialType =
     exchange.en_name === 'Binance' ? 'Binance' : exchange.type[0] ?? ('API' as PlatformConnectType);
   const [selectedType, setSelectedType] = useState<PlatformConnectType>(initialType);
@@ -183,6 +186,14 @@ export const ConnectPanel = ({ exchange, session, onConnected }: Props) => {
           color="default"
           sx={{ bgcolor: 'rgba(255,255,255,0.08)', color: 'white' }}
         />
+        <IconButton
+          size="small"
+          onClick={onClose}
+          sx={{ color: 'white', ml: 1 }}
+          aria-label="닫기"
+        >
+          <CloseIcon fontSize="small" />
+        </IconButton>
       </Box>
       <CardContent sx={{ flex: 1, bgcolor: 'white', borderTopLeftRadius: 16, borderTopRightRadius: 16 }}>
         <Stack spacing={2}>

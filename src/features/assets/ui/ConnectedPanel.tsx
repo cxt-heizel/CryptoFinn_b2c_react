@@ -7,10 +7,12 @@ import {
   Chip,
   Divider,
   Grid,
+  IconButton,
   Stack,
   TextField,
   Typography,
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import {
   ExchangeMeta,
   PlatformStatus,
@@ -54,6 +56,7 @@ type Props = {
   allExchanges?: ExchangeMeta[];
   session?: string;
   onUpdated?: () => void;
+  onClose?: () => void;
 };
 
 const truncate = (text?: string) => {
@@ -62,7 +65,14 @@ const truncate = (text?: string) => {
   return `${text.slice(0, 4)}...${text.slice(-4)}`;
 };
 
-export const ConnectedPanel = ({ exchange, status, allExchanges, session, onUpdated }: Props) => {
+export const ConnectedPanel = ({
+  exchange,
+  status,
+  allExchanges,
+  session,
+  onUpdated,
+  onClose,
+}: Props) => {
   const [dialog, setDialog] = useState<DialogState>({ type: null });
   const [nameInput, setNameInput] = useState(exchange.nickname);
   const [apiKey, setApiKey] = useState('');
@@ -434,6 +444,9 @@ export const ConnectedPanel = ({ exchange, status, allExchanges, session, onUpda
         {statusBadge ? (
           <Chip label={statusBadge.label} color={statusBadge.color} variant="outlined" />
         ) : null}
+        <IconButton size="small" onClick={onClose} aria-label="닫기">
+          <CloseIcon fontSize="small" />
+        </IconButton>
       </Stack>
 
       <Divider sx={{ my: 1 }} />

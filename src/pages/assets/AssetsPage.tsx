@@ -203,6 +203,7 @@ export const AssetsPage = () => {
           exchange={selectedPending}
           session={session}
           onConnected={handleConnected}
+          onClose={() => setSelection({ kind: null, key: null })}
         />
       );
     }
@@ -215,6 +216,7 @@ export const AssetsPage = () => {
           allExchanges={allExchanges}
           session={session}
           onUpdated={handleConnected}
+          onClose={() => setSelection({ kind: null, key: null })}
         />
       );
     }
