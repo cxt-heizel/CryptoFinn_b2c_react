@@ -221,7 +221,13 @@ export const AssetsPage = () => {
       );
     }
 
-    return <AssetsDashboard exchanges={connectedExchanges} statusMap={statusMap} />;
+    return (
+      <AssetsDashboard
+        exchanges={connectedExchanges}
+        pending={pendingSelections}
+        statusMap={statusMap}
+      />
+    );
   };
 
   return (

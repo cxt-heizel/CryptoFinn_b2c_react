@@ -77,7 +77,8 @@ export const PlatformList = ({ sections, selectedKey, onSelect }: Props) => {
                         gap: 1.25,
                         py: 1.25,
                         borderRadius:0,
-                        height: 86
+                        height: 86,
+                        borderBottom:'1px solid var(--Color-greyscale-300)'
                       }}
                     >
                       <Avatar

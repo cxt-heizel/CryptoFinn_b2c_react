@@ -1,8 +1,6 @@
 import { Fragment } from 'react';
 import {
-  Avatar,
   Box,
-  Button,
   Chip,
   Stack,
   Table,
@@ -15,28 +13,26 @@ import {
 } from '@mui/material';
 import {
   categoryLabels,
+  ExchangeMeta,
   PlatformCategory,
   PlatformStatus,
-  statusBadges,
   UserExchange,
   formatUpdatedAt,
 } from '../model/types';
 
 type Props = {
   exchanges: UserExchange[];
+  pending?: ExchangeMeta[];
   statusMap: Record<number, PlatformStatus>;
 };
 
 const ASSET_COLUMNS = ['KRW', 'USD', 'BTC', 'SEI', 'AED', 'BNB', 'ETH', 'ICP', 'TRX'];
 
-const groupByCategory = (items: UserExchange[]) => {
-  return items.reduce<Record<PlatformCategory, UserExchange[]>>(
-    (acc, cur) => {
-      acc[cur.category] = acc[cur.category] ? [...acc[cur.category], cur] : [cur];
-      return acc;
-    },
-    { L: [], F: [], W: [] },
-  );
+const groupByCategory = (connected: UserExchange[], pending: ExchangeMeta[] = []) => {
+  const base: Record<PlatformCategory, Array<UserExchange | ExchangeMeta>> = { L: [], F: [], W: [] };
+  connected.forEach((item) => base[item.category].push(item));
+  pending.forEach((item) => base[item.category].push(item));
+  return base;
 };
 
 const formatNumber = (value?: number | null) => {
@@ -66,14 +62,15 @@ const getAssetDisplay = (item: UserExchange, code: string) => {
   };
 };
 
-export const AssetsDashboard = ({ exchanges, statusMap }: Props) => {
-  const grouped = groupByCategory(exchanges);
+export const AssetsDashboard = ({ exchanges, pending = [], statusMap }: Props) => {
+  const grouped = groupByCategory(exchanges, pending);
   const lastUpdated = exchanges
     .map((e) => e.updated_at)
     .filter(Boolean)
     .sort()
     .reverse()[0];
   const totalAmountLabel = '940,520원';
+  const pendingCount = pending.length;
 
   return (
     <Stack sx={{ height: '100%', bgcolor: 'var(--Color-greyscale-000)' }}>
@@ -102,6 +99,9 @@ export const AssetsDashboard = ({ exchanges, statusMap }: Props) => {
             <Chip size="small" label="ULTRA" variant="outlined" />
             <Chip size="small" label={`등록거래 ${exchanges.length}건`} variant="outlined" />
             <Chip size="small" label={`연결플랫폼 ${exchanges.length}개`} variant="outlined" />
+            {pendingCount > 0 ? (
+              <Chip size="small" label={`연결대기 ${pendingCount}개`} variant="outlined" />
+            ) : null}
           </Stack>
           <Stack direction="row" alignItems="center" spacing={1.5}>
             <Typography variant="body2" color="text.secondary">
@@ -114,9 +114,8 @@ export const AssetsDashboard = ({ exchanges, statusMap }: Props) => {
       <Box sx={{display:'grid', gridTemplateColumns:'1fr 200px'}}>      
         {(['L', 'F', 'W'] as PlatformCategory[]).map((category) => {
           const list = grouped[category];
-          const colSpan = ASSET_COLUMNS.length + 3;
           return (
-            <>
+            <Fragment key={category}>
             <TableContainer
               component={Box}
             >
@@ -135,48 +134,53 @@ export const AssetsDashboard = ({ exchanges, statusMap }: Props) => {
                     </TableRow>
                   </TableHead>
                   <TableBody>  
-                    <Fragment key={category}>
-                      {list.length === 0 ? (
-                        <TableRow>
-                          <TableCell colSpan={colSpan}>
-                            <Typography variant="body2" color="text.secondary">
-                              연결된 {categoryLabels[category]}가 없어요.
-                            </Typography>
-                          </TableCell>
-                        </TableRow>
-                      ) : (
-                        list.map((item) => {
-                          const status = statusMap[item.seq_user_exchange];
-                          const badge = status ? statusBadges[status] : undefined;
-                          const tradeCount = item.connect_cnt ?? item.sub_accounts?.length ?? 0;
-                          const total = formatAmountLabel(
-                            ((item as Record<string, unknown>).total_amount ??
-                              (item as Record<string, unknown>).total) as number | string | null,
-                          );
-                          return (
-                            <TableRow key={item.seq_user_exchange} hover>
-                              {ASSET_COLUMNS.map((code) => {
-                                const asset = getAssetDisplay(item, code);
-                                return (
-                                  <TableCell key={code} align="center">
-                                    <Stack spacing={0.25} alignItems="center">
-                                      <Typography variant="body2" fontWeight={600}>
-                                        {asset.top}
+                    {list.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={ASSET_COLUMNS.length}>
+                          <Typography variant="body2" color="text.secondary">
+                            연결된 {categoryLabels[category]}가 없어요.
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      list.map((item) => {
+                        const isConnected = 'seq_user_exchange' in item;
+                        const rowKey = isConnected
+                          ? `connected-${(item as UserExchange).seq_user_exchange}`
+                          : `pending-${(item as ExchangeMeta).seq}`;
+                        const status = isConnected
+                          ? statusMap[(item as UserExchange).seq_user_exchange]
+                          : undefined;
+                        const rowBg = !isConnected
+                          ? 'var(--Color-greyscale-050)'
+                          : status === 'Crawling'
+                            ? 'rgba(255, 193, 7, 0.12)'
+                            : undefined;
+                        return (
+                          <TableRow key={rowKey} hover sx={{ bgcolor: rowBg, height: 86 }}>
+                            {ASSET_COLUMNS.map((code) => {
+                              const asset = isConnected
+                                ? getAssetDisplay(item as UserExchange, code)
+                                : { top: '-', bottom: '' };
+                              return (
+                                <TableCell key={`${rowKey}-${code}`} align="center">
+                                  <Stack spacing={0.25} alignItems="center">
+                                    <Typography variant="body2" fontWeight={600}>
+                                      {asset.top}
+                                    </Typography>
+                                    {asset.bottom ? (
+                                      <Typography variant="caption" color="text.secondary">
+                                        {asset.bottom}
                                       </Typography>
-                                      {asset.bottom ? (
-                                        <Typography variant="caption" color="text.secondary">
-                                          {asset.bottom}
-                                        </Typography>
-                                      ) : null}
-                                    </Stack>
-                                  </TableCell>
-                                );
-                              })}
-                            </TableRow>
-                          );
-                        })
-                      )}
-                    </Fragment>
+                                    ) : null}
+                                  </Stack>
+                                </TableCell>
+                              );
+                            })}
+                          </TableRow>
+                        );
+                      })
+                    )}
                   </TableBody>
               </Table>
             </TableContainer>
@@ -193,10 +197,9 @@ export const AssetsDashboard = ({ exchanges, statusMap }: Props) => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <Fragment key={category}>
                     {list.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={colSpan}>
+                          <TableCell>
                             <Typography variant="body2" color="text.secondary">
                               연결하기
                             </Typography>
@@ -204,13 +207,26 @@ export const AssetsDashboard = ({ exchanges, statusMap }: Props) => {
                         </TableRow>
                       ) : (
                         list.map((item) => {
-                          const tradeCount = item.connect_cnt ?? item.sub_accounts?.length ?? 0;
-                          const total = formatAmountLabel(
-                            ((item as Record<string, unknown>).total_amount ??
-                              (item as Record<string, unknown>).total) as number | string | null,
-                          );
+                          const isConnected = 'seq_user_exchange' in item;
+                          const rowKey = isConnected
+                            ? `connected-${(item as UserExchange).seq_user_exchange}`
+                            : `pending-${(item as ExchangeMeta).seq}`;
+                          const status = isConnected
+                            ? statusMap[(item as UserExchange).seq_user_exchange]
+                            : undefined;
+                          const rowBg = !isConnected
+                            ? 'var(--Color-greyscale-050)'
+                            : status === 'Crawling'
+                              ? 'rgba(255, 193, 7, 0.12)'
+                              : undefined;
+                          const total = isConnected
+                            ? formatAmountLabel(
+                                ((item as Record<string, unknown>).total_amount ??
+                                  (item as Record<string, unknown>).total) as number | string | null,
+                              )
+                            : '—';
                           return (
-                            <TableRow key={item.seq_user_exchange} hover>
+                            <TableRow key={`${rowKey}-total`} hover sx={{ bgcolor: rowBg, height: 86 }}>
                               <TableCell align="right">
                                 <Typography variant="body1" fontWeight={600}>
                                   {total}
@@ -220,11 +236,10 @@ export const AssetsDashboard = ({ exchanges, statusMap }: Props) => {
                           );
                         })
                       )}
-                    </Fragment>
                   </TableBody>
               </Table>
             </TableContainer>
-          </>
+          </Fragment>
           );
         })}
       </Box>
