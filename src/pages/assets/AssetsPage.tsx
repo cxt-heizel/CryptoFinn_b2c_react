@@ -29,17 +29,45 @@ type Selection =
   | { kind: 'pending'; key: string }
   | { kind: null; key: null };
 
+const isExchangeStatusOk = (status?: string) => {
+  if (!status) return true;
+  return String(status).toLowerCase() === 'ok';
+};
+
+
 const buildStatusMap = (items: UserExchange[], crawlerState?: { resultVal: PlatformStatus; deleting: number[]; crawling: number[] }) => {
   const map: Record<number, PlatformStatus> = {};
   const baseStatus = crawlerState?.resultVal ?? 'Normal';
+  const deletingSet = new Set((crawlerState?.deleting ?? []).map((seq) => Number(seq)));
+  const crawlingSet = new Set((crawlerState?.crawling ?? []).map((seq) => Number(seq)));
+
   items.forEach((item) => {
-    map[item.seq_user_exchange] = baseStatus;
-  });
-  crawlerState?.crawling?.forEach((seq) => {
-    map[Number(seq)] = 'Crawling';
-  });
-  crawlerState?.deleting?.forEach((seq) => {
-    map[Number(seq)] = 'Deleting';
+    const seq = item.seq_user_exchange;
+    const isOk = isExchangeStatusOk(item.status);
+    const isDeleting = deletingSet.has(seq);
+    const isCrawling = crawlingSet.has(seq);
+    let displayStatus: PlatformStatus;
+
+    switch (baseStatus) {
+      case 'Deleting':
+        displayStatus = isDeleting ? 'Deleting' : isOk ? 'Normal' : 'Error';
+        break;
+      case 'Crawling':
+        displayStatus = !isOk ? 'Error' : isCrawling ? 'Crawling' : 'Normal';
+        break;
+      case 'Standby':
+        displayStatus = isOk ? 'Standby' : 'Error';
+        break;
+      case 'Calculating':
+        displayStatus = isOk ? 'Calculating' : 'Error';
+        break;
+      case 'Normal':
+      default:
+        displayStatus = isOk ? 'Normal' : 'Error';
+        break;
+    }
+
+    map[seq] = displayStatus;
   });
   return map;
 };
@@ -96,7 +124,6 @@ export const AssetsPage = () => {
   } = useUserExchangesQuery(session);
   const { data: allExchangeResponse, isLoading: isAllLoading } = useAllExchangesQuery(session);
   const { data: crawlerState } = useCrawlerStateQuery(session);
-
   const connectedExchanges = useMemo(() => {
     if (!userExchangeResponse?.exchange_list) return [];
     return flattenUserExchanges(userExchangeResponse.exchange_list);
@@ -232,7 +259,7 @@ export const AssetsPage = () => {
 
   return (
     <Stack spacing={2} sx={{ height: 'calc(100vh - 140px)', border: '1px solid rgba(0, 0, 0, 0.1)',borderRadius: '14px' , overflow:'hidden' }}>
-      <Box sx={{ display: 'grid', gridTemplateColumns: '460px 1fr', height: '100%' }}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: '460px 1fr', height: '100%',overflow: 'auto', gap: '1px', background:'var(--Color-greyscale-300)' }}>
         <PlatformList sections={sections} selectedKey={selection.key ?? undefined} onSelect={handleSelect} />
         <Box sx={{ height: '100%', minHeight: 0 }}>{renderContent()}</Box>
       </Box>

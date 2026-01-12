@@ -50,7 +50,7 @@ export const useCrawlerStateQuery = (session?: string, options: CrawlerOptions =
     queryKey: key,
     queryFn: () => fetchCrawlerState(session, headers),
     enabled: enabled && Boolean(session),
-    refetchInterval,
-    refetchIntervalInBackground: true,
+    // refetchInterval,
+    // refetchIntervalInBackground: true,
   });
 };

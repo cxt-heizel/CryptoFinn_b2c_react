@@ -14,8 +14,18 @@ export const ThemeProvider = ({ children }: Props) => {
           mode: 'light',
           primary: { main: '#505866' },
           secondary: { main: '#5789EC' },
-          warning : { main: '#CE1414' },
-          success : { main: '#1BC290' },
+          warning : { 
+            main: '#FFF7EB' ,
+            contrastText:'#EBA533'
+          },
+          success : { 
+            main:'#E5FFF6',
+            contrastText:'#1BC290'
+          },
+          error: {
+            main: '#FFDEE8',
+            contrastText:'#EC113A'
+          },
           text: {
             primary: '#1A1E27',
             secondary: '#555',

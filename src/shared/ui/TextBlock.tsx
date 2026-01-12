@@ -62,10 +62,25 @@ export const TextBlock = ({
   nowrap = true,
   slotProps,
 }: TextBlockProps) => {
-  const { gap, titleVariant, descVariant, titleSx, descSx } = sizeTokens[size];
+  const {
+    gap: defaultGap,
+    titleVariant,
+    descVariant,
+    titleSx,
+    descSx,
+  } = sizeTokens[size];
   const rootProps = slotProps?.root ?? {};
   const titleProps = slotProps?.title ?? {};
   const descProps = slotProps?.desc ?? {};
+  const {
+    sx: rootSx,
+    gap: rootGap,
+    alignItems: rootAlignItems,
+    justifyContent: rootJustifyContent,
+    textAlign: rootTextAlign,
+    ...rootRest
+  } = rootProps;
+  const rootSxArray = Array.isArray(rootSx) ? rootSx : rootSx ? [rootSx] : [];
 
   const commonTypographySx = {
     whiteSpace: nowrap ? 'nowrap' : 'normal',
@@ -73,7 +88,14 @@ export const TextBlock = ({
     letterSpacing: '-0.015em',
   };
 
-  const titleElement = (
+  const hasTitle = title !== null && title !== undefined;
+  const hasDesc = desc !== null && desc !== undefined;
+
+  if (!hasTitle && !hasDesc) {
+    return null;
+  }
+
+  const titleElement = hasTitle ? (
     <Typography
       {...titleProps}
       variant={titleProps.variant ?? titleVariant}
@@ -89,9 +111,9 @@ export const TextBlock = ({
     >
       {title}
     </Typography>
-  );
+  ) : null;
 
-  const descElement = (
+  const descElement = hasDesc ? (
     <Typography
       {...descProps}
       variant={descProps.variant ?? descVariant}
@@ -107,34 +129,34 @@ export const TextBlock = ({
     >
       {desc}
     </Typography>
-  );
+  ) : null;
 
   return (
     <Box
-      {...rootProps}
+      {...rootRest}
       sx={[
         {
           display: 'flex',
           flexDirection: 'column',
-          alignItems: flexAlign[align],
-          justifyContent: 'center',
-          textAlign: textAlign[align],
-          gap,
-          ...rootProps.sx,
+          alignItems: rootAlignItems ?? flexAlign[align],
+          justifyContent: rootJustifyContent ?? 'center',
+          textAlign: rootTextAlign ?? textAlign[align],
+          gap: rootGap ?? defaultGap,
         },
+        ...rootSxArray,
       ]}
       data-name={`align=${align}, titleFirst=${titleFirst}, size=${size}`}
       data-node-id="4550:7343"
     >
       {titleFirst ? (
         <>
-          {titleElement}
-          {descElement}
+          {titleElement ? titleElement : null}
+          {descElement ? descElement : null}
         </>
       ) : (
         <>
-          {descElement}
-          {titleElement}
+          {descElement ? descElement : null}
+          {titleElement ? titleElement : null}
         </>
       )}
     </Box>

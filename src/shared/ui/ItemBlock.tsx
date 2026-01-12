@@ -49,13 +49,9 @@ export const ItemBlock = ({
         sx={[
           {
             color: '#9747FF',
-            fontSize: 12,
-            fontWeight: 400,
-            lineHeight: 1.66,
-            letterSpacing: 0.4,
-            fontFamily: `'Roboto', 'Pretendard', sans-serif`,
+            fontSize: 12
           },
-          actionLabelProps.sx,
+          actionLabelProps.sx
         ]}
       >
         Instance Slot

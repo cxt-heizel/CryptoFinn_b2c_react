@@ -4,7 +4,9 @@ export type PlatformCategory = 'L' | 'F' | 'W';
 
 export type PlatformConnectType = 'API' | 'EXCEL' | 'FILE' | 'TEMPLATE' | 'WALLET' | 'Binance';
 
-export type PlatformStatus = 'Normal' | 'Deleting' | 'Crawling' | 'Standby' | 'Calculating';
+export type PlatformStatus = 'Normal' | 'Deleting' | 'Crawling' | 'Standby' | 'Calculating' | 'Error';
+
+export type ExchangeConnectionStatus = 'ok' | 'I' | 'EX' | (string & {});
 
 export interface AssetFile {
   file_name: string;
@@ -17,7 +19,7 @@ export interface SubAccount {
   api_key?: string;
   address?: string;
   file_list?: AssetFile[] | null;
-  status?: string;
+  status?: ExchangeConnectionStatus;
   master_en_name?: string;
 }
 
@@ -41,6 +43,7 @@ export interface UserExchange extends ExchangeMeta {
   file_list?: AssetFile[] | null;
   account_type?: string;
   sub_accounts?: SubAccount[];
+  status?: ExchangeConnectionStatus;
 }
 
 export interface CategorizedUserExchanges {
@@ -72,13 +75,26 @@ export const categoryLabels: Record<PlatformCategory, string> = {
 
 export const statusBadges: Record<
   PlatformStatus,
-  { label: string; color: 'success' | 'warning' | 'error' | 'info' }
+  { label: string; color: 'success' | 'warning' | 'error'}
 > = {
   Normal: { label: '연결완료', color: 'success' },
-  Deleting: { label: '삭제중', color: 'error' },
+  Deleting: { label: '삭제중', color: 'warning' },
   Crawling: { label: '수집중', color: 'warning' },
-  Standby: { label: '연산대기', color: 'info' },
+  Standby: { label: '대기중', color: 'warning' },
   Calculating: { label: '연산중', color: 'warning' },
+  Error: { label: '오류', color: 'error' },
+};
+
+export const statusLabels: Record<
+  PlatformStatus,
+  { label: string; color: 'success' | 'warning' | 'error'}
+> = {
+  Normal: { label: '수집이 완료됐어요', color: 'success' },
+  Deleting: { label: '삭제중입니다', color: 'warning' },
+  Crawling: { label: '수집중입니다', color: 'warning' },
+  Standby: { label: '대기중입니다', color: 'warning' },
+  Calculating: { label: '연산중입니다', color: 'warning' },
+  Error: { label: '오류가 발생하여 연결을 유지할 수 없습니다 삭제 후 다시 연결해 주세요', color: 'error' },
 };
 
 const CATEGORY_ORDER: PlatformCategory[] = ['L', 'F', 'W'];
